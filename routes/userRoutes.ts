@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsuario, registrarUsuario } from "../controller/userController";
+import { editarUsuario, getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
 
 const userRouter = Router();
@@ -7,7 +7,7 @@ const userRouter = Router();
 
 userRouter.get("/", getUsuario);
 
-userRouter.post("/", [
+userRouter.post("/registrarUsuario", [
     body('nombre').notEmpty(),
     body('primerApellido').notEmpty(),
     body('segundoApellido').notEmpty(),
@@ -15,6 +15,16 @@ userRouter.post("/", [
     body('fechaContratacion').notEmpty(),
     body('sueldo').notEmpty()
 ],registrarUsuario);
+
+userRouter.post("/editarUsuario", [
+    body('nombre').notEmpty(),
+    body('primerApellido').notEmpty(),
+    body('segundoApellido').notEmpty(),
+    body('puesto').notEmpty(),
+    body('fechaContratacion').notEmpty(),
+    body('sueldo').notEmpty()
+],editarUsuario);
+
 
 
 export default userRouter;

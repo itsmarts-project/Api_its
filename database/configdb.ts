@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-const databaseConnection = new Sequelize('geoapoyos', 'postgres', '1924', {
+const databaseConnection = new Sequelize('itsmarts', 'postgres', 'root', {
     host:'localhost',
     dialect: 'postgres'
 });
