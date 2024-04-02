@@ -16,11 +16,15 @@ exports.Server = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const configdb_1 = __importDefault(require("../database/configdb"));
+const userRoutes_1 = __importDefault(require("../routes/userRoutes"));
+const loginRouter_1 = __importDefault(require("../routes/loginRouter"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || "8080";
+        this.middlewares();
         this.connection();
+        this.routes();
     }
     middlewares() {
         this.app.use((0, cors_1.default)());
@@ -36,6 +40,10 @@ class Server {
                 throw new Error(`${e}`);
             }
         });
+    }
+    routes() {
+        this.app.use("/usuarios", userRoutes_1.default);
+        this.app.use("/login", loginRouter_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {

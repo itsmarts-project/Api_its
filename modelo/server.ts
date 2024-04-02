@@ -1,6 +1,8 @@
 import express, {Application} from 'express';
 import cors from 'cors';
 import databaseConnection  from '../database/configdb';
+import userRouter from '../routes/userRoutes';
+import loginRouter from '../routes/loginRouter';
 
 export class Server{
     private app: Application;
@@ -9,14 +11,16 @@ export class Server{
     constructor(){
         this.app = express();
         this.port = process.env.PORT || "8080";
+        this.middlewares();
         this.connection();
+        this.routes();
 
     }
 
     middlewares(){
         this.app.use(cors());
         this.app.use(express.json());
-        
+
     }
 
     async connection(){
@@ -26,6 +30,11 @@ export class Server{
         }catch(e){
             throw new Error(`${e}`);
         }
+    }
+
+    routes(){
+        this.app.use("/usuarios", userRouter);
+        this.app.use("/login",loginRouter)
     }
 
     listen(){
