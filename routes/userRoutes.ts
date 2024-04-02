@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
+import validarCampos from "../middlewares/ValidarErrores";
 
 const userRouter = Router();
 
@@ -13,7 +14,8 @@ userRouter.post("/", [
     body('segundoApellido').notEmpty(),
     body('puesto').notEmpty(),
     body('fechaContratacion').notEmpty(),
-    body('sueldo').notEmpty()
+    body('sueldo').notEmpty(),
+    validarCampos
 ],registrarUsuario);
 
 
