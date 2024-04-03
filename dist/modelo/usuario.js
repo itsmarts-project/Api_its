@@ -21,7 +21,8 @@ const Usuario = configdb_1.default.define("usuario", {
         type: sequelize_1.DataTypes.STRING
     },
     puesto: {
-        type: sequelize_1.DataTypes.STRING
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false
     },
     fechaContratacion: {
         type: sequelize_1.DataTypes.DATEONLY

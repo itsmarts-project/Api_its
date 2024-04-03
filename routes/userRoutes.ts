@@ -3,12 +3,14 @@ import { editarUsuario, getUsuario, registrarUsuario } from "../controller/userC
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
 import validarJWT from "../middlewares/validarToken";
+import validarRol from "../middlewares/validarRol";
 
 const userRouter = Router();
 
 
 userRouter.get("/",[
     validarJWT,
+    validarRol(['AD']),
     validarCampos
 ] ,getUsuario);
 

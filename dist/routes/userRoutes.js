@@ -8,9 +8,11 @@ const userController_1 = require("../controller/userController");
 const express_validator_1 = require("express-validator");
 const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"));
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
+const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
 const userRouter = (0, express_1.Router)();
 userRouter.get("/", [
     validarToken_1.default,
+    (0, validarRol_1.default)(['AD']),
     ValidarErrores_1.default
 ], userController_1.getUsuario);
 userRouter.post("/registrarUsuario", [

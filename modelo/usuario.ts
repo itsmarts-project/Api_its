@@ -32,7 +32,8 @@ const Usuario = databaseConnection.define<UsuarioInstance>("usuario", {
     type: DataTypes.STRING
   },
   puesto: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false
   },
   fechaContratacion: {
     type: DataTypes.DATEONLY
