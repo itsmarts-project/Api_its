@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import databaseConnection from "../database/configdb";
 
-interface SolicitanteAttributes {
+export interface SolicitanteAttributes {
   idSolicitante: number;
   nombre: string;
   primerApellido: string;
