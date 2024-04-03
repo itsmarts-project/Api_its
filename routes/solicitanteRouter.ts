@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { agregarSolicitante } from "../controller/solicitanteController";
+import { agregarSolicitante, editarSolicitante } from "../controller/solicitanteController";
 import { body } from "express-validator";
 
 const solicitanteRouter = Router();
@@ -14,5 +14,9 @@ solicitanteRouter.post("/agregarSolicitante",
   ],
   agregarSolicitante
 );
+
+/*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS 
+LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
+solicitanteRouter.post("/editarSolicitante", editarSolicitante);
 
 export default solicitanteRouter;

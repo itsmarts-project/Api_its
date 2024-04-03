@@ -35,5 +35,7 @@ userRouter.post("/editarUsuario", userController_1.editarUsuario);
 userRouter.post("/borrarUsuario", userController_1.borrarUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/bloquearUsuario", userController_1.bloquearUsuario);
+//METODO POST, RECIBE UNICAMENTE ID DE USUARIO
+userRouter.post("/desbloquearUsuario", userController_1.desbloquearUsuario);
 exports.default = userRouter;
 //# sourceMappingURL=userRoutes.js.map

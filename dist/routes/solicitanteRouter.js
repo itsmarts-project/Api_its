@@ -11,5 +11,8 @@ solicitanteRouter.post("/agregarSolicitante", [
     (0, express_validator_1.body)("edad").notEmpty().withMessage("La edad es requerida"),
     (0, express_validator_1.body)("correo").notEmpty().withMessage("El correo es requerido").isEmail().withMessage("El correo debe ser válido")
 ], solicitanteController_1.agregarSolicitante);
+/*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS
+LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
+solicitanteRouter.post("/editarSolicitante", solicitanteController_1.editarSolicitante);
 exports.default = solicitanteRouter;
 //# sourceMappingURL=solicitanteRouter.js.map

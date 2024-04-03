@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { bloquearUsuario, borrarUsuario, editarUsuario, getUsuario, registrarUsuario } from "../controller/userController";
+import { bloquearUsuario, borrarUsuario, desbloquearUsuario, editarUsuario, getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
 import validarJWT from "../middlewares/validarToken";
@@ -41,6 +41,9 @@ userRouter.post("/borrarUsuario", borrarUsuario);
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/bloquearUsuario", bloquearUsuario);
+
+//METODO POST, RECIBE UNICAMENTE ID DE USUARIO
+userRouter.post("/desbloquearUsuario", desbloquearUsuario);
 
 
 export default userRouter;

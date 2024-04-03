@@ -125,3 +125,26 @@ export const borrarUsuario = async (req: Request, res: Response) => {
       return res.status(500).send({ e });
     }
   };
+
+  export const desbloquearUsuario = async (req: Request, res: Response) => {
+    const { idUsuario } = req.body;
+  
+    try {
+      // Buscar el usuario por su idUsuario
+      const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
+  
+      if (!usuario) {
+        return res.status(404).send({ msg: "Usuario no encontrado" });
+      }
+  
+      // Cambiar el estatus del usuario a "BA" (baja)
+      usuario.estatus = "AC";
+  
+      // Guardar los cambios en la base de datos
+      await usuario.save();
+  
+      res.send({ usuario });
+    } catch (e) {
+      return res.status(500).send({ e });
+    }
+  };
