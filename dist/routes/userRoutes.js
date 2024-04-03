@@ -10,11 +10,16 @@ const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
 const userRouter = (0, express_1.Router)();
+/*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE
+ADMITE EL TOKEN VALIDO DE UN ADMINISTRADOR (AD)*/
 userRouter.get("/", [
     validarToken_1.default,
     (0, validarRol_1.default)(['AD']),
     ValidarErrores_1.default
 ], userController_1.getUsuario);
+/*METODO POST, RECIBE "nombre", "primerApellido", "segundoApellido",
+"puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
+"fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
     (0, express_validator_1.body)('nombre').notEmpty(),
     (0, express_validator_1.body)('primerApellido').notEmpty(),
@@ -23,6 +28,8 @@ userRouter.post("/registrarUsuario", [
     (0, express_validator_1.body)('fechaContratacion').notEmpty(),
     (0, express_validator_1.body)('sueldo').notEmpty()
 ], userController_1.registrarUsuario);
+/*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS
+LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
 userRouter.post("/editarUsuario", [
     (0, express_validator_1.body)('nombre').notEmpty(),
     (0, express_validator_1.body)('primerApellido').notEmpty(),
@@ -31,7 +38,9 @@ userRouter.post("/editarUsuario", [
     (0, express_validator_1.body)('fechaContratacion').notEmpty(),
     (0, express_validator_1.body)('sueldo').notEmpty()
 ], userController_1.editarUsuario);
+//METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/borrarUsuario", userController_1.borrarUsuario);
+//METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/bloquearUsuario", userController_1.bloquearUsuario);
 exports.default = userRouter;
 //# sourceMappingURL=userRoutes.js.map
