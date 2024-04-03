@@ -9,6 +9,7 @@ const express_validator_1 = require("express-validator");
 const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"));
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
+const validarEmail_1 = __importDefault(require("../middlewares/validarEmail"));
 const userRouter = (0, express_1.Router)();
 /*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE
 ADMITE EL TOKEN VALIDO DE UN ADMINISTRADOR (AD)*/
@@ -21,6 +22,7 @@ userRouter.get("/", [
 "puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
 "fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
+    validarEmail_1.default,
     (0, express_validator_1.body)('nombre').notEmpty(),
     (0, express_validator_1.body)('primerApellido').notEmpty(),
     (0, express_validator_1.body)('segundoApellido').notEmpty(),

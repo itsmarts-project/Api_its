@@ -3,6 +3,7 @@ import cors from 'cors';
 import databaseConnection  from '../database/configdb';
 import userRouter from '../routes/userRoutes';
 import loginRouter from '../routes/loginRouter';
+import solicitanteRouter from '../routes/solicitanteRouter';
 
 export class Server{
     private app: Application;
@@ -34,7 +35,8 @@ export class Server{
 
     routes(){
         this.app.use("/usuarios", userRouter);
-        this.app.use("/login",loginRouter)
+        this.app.use("/login",loginRouter);
+        this.app.use("/solicitante", solicitanteRouter);
     }
 
     listen(){

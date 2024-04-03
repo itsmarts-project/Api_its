@@ -4,6 +4,7 @@ import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
 import validarJWT from "../middlewares/validarToken";
 import validarRol from "../middlewares/validarRol";
+import validarCorreoUsuario from "../middlewares/validarEmail";
 
 const userRouter = Router();
 
@@ -21,6 +22,7 @@ userRouter.get("/", [
 "puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
 "fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
+    validarCorreoUsuario,
     body('nombre').notEmpty(),
     body('primerApellido').notEmpty(),
     body('segundoApellido').notEmpty(),
