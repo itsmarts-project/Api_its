@@ -1,11 +1,16 @@
 import { Router } from "express";
 import { editarUsuario, getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
+import validarCampos from "../middlewares/ValidarErrores";
+import validarJWT from "../middlewares/validarToken";
 
 const userRouter = Router();
 
 
-userRouter.get("/", getUsuario);
+userRouter.get("/",[
+    validarJWT,
+    validarCampos
+] ,getUsuario);
 
 userRouter.post("/registrarUsuario", [
     body('nombre').notEmpty(),
