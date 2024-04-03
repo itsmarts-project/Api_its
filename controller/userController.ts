@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
-import Usuario from "../modelo/usuario";
+import Usuario, { UsuarioInstance } from "../modelo/usuario";
 
 export const getUsuario = async(req: Request, res: Response) => {
 
@@ -80,3 +80,48 @@ export const editarUsuario = async (req: Request, res: Response) => {
     }
 };
 
+export const borrarUsuario = async (req: Request, res: Response) => {
+    const { idUsuario } = req.body;
+  
+    try {
+      // Buscar el usuario por su idUsuario
+      const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
+  
+      if (!usuario) {
+        return res.status(404).send({ msg: "Usuario no encontrado" });
+      }
+  
+      // Cambiar el estatus del usuario a "BA" (baja)
+      usuario.estatus = "BA";
+  
+      // Guardar los cambios en la base de datos
+      await usuario.save();
+  
+      res.send({ usuario });
+    } catch (e) {
+      return res.status(500).send({ e });
+    }
+  };
+
+  export const bloquearUsuario = async (req: Request, res: Response) => {
+    const { idUsuario } = req.body;
+  
+    try {
+      // Buscar el usuario por su idUsuario
+      const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
+  
+      if (!usuario) {
+        return res.status(404).send({ msg: "Usuario no encontrado" });
+      }
+  
+      // Cambiar el estatus del usuario a "BA" (baja)
+      usuario.estatus = "BL";
+  
+      // Guardar los cambios en la base de datos
+      await usuario.save();
+  
+      res.send({ usuario });
+    } catch (e) {
+      return res.status(500).send({ e });
+    }
+  };

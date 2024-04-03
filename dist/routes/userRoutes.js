@@ -31,5 +31,7 @@ userRouter.post("/editarUsuario", [
     (0, express_validator_1.body)('fechaContratacion').notEmpty(),
     (0, express_validator_1.body)('sueldo').notEmpty()
 ], userController_1.editarUsuario);
+userRouter.post("/borrarUsuario", userController_1.borrarUsuario);
+userRouter.post("/bloquearUsuario", userController_1.bloquearUsuario);
 exports.default = userRouter;
 //# sourceMappingURL=userRoutes.js.map
