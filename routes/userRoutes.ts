@@ -32,14 +32,7 @@ userRouter.post("/registrarUsuario", [
 
 /*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS 
 LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
-userRouter.post("/editarUsuario", [
-    body('nombre').notEmpty(),
-    body('primerApellido').notEmpty(),
-    body('segundoApellido').notEmpty(),
-    body('puesto').notEmpty(),
-    body('fechaContratacion').notEmpty(),
-    body('sueldo').notEmpty()
-], editarUsuario);
+userRouter.post("/editarUsuario", editarUsuario);
 
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
