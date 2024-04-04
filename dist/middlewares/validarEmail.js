@@ -12,7 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.validarCorreoSolicitante = exports.validarCorreoUsuario = void 0;
 const usuario_1 = __importDefault(require("../modelo/usuario"));
+const solicitante_1 = __importDefault(require("../modelo/solicitante"));
+//Valida que no se repita el correo del usuario a la hora de registrar
 const validarCorreoUsuario = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { correo } = req.body;
     try {
@@ -31,5 +34,25 @@ const validarCorreoUsuario = (req, res, next) => __awaiter(void 0, void 0, void 
         });
     }
 });
-exports.default = validarCorreoUsuario;
+exports.validarCorreoUsuario = validarCorreoUsuario;
+//Valida que no se repita el correo a la hora de registrar un solicitante
+const validarCorreoSolicitante = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { correo } = req.body.solicitante;
+    try {
+        const solicitante = yield solicitante_1.default.findOne({ where: { correo: correo } });
+        console.log(solicitante);
+        if (solicitante) {
+            return res.status(401).send({
+                msg: "Solicitante ya existente"
+            });
+        }
+        next();
+    }
+    catch (e) {
+        return res.status(500).send({
+            msg: e
+        });
+    }
+});
+exports.validarCorreoSolicitante = validarCorreoSolicitante;
 //# sourceMappingURL=validarEmail.js.map
