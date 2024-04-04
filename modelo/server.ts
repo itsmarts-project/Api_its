@@ -34,7 +34,7 @@ export class Server{
     }
 
     routes(){
-        this.app.use("/usua", userRouter);
+        this.app.use("/user", userRouter);
         this.app.use("/login", loginRouter);
         this.app.use("/soli", solicitanteRouter)
     }
