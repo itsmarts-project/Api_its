@@ -1,13 +1,10 @@
 import { Router } from "express";
-import { guardarSolicitante } from "../controller/solicitanteController";
-import validarJWT from "../middlewares/validarToken";
-import { validarCorreoSolicitante } from "../middlewares/validarEmail";
+import { editarSolicitante, guardarSolicitante } from "../controller/solicitanteController";
 
 const solicitanteRouter = Router();
 
-solicitanteRouter.post("/registrar", [
-    validarJWT,
-    validarCorreoSolicitante
-],guardarSolicitante);
+solicitanteRouter.post("/registrar", guardarSolicitante);
+solicitanteRouter.put("/editar", editarSolicitante);
+
 
 export default solicitanteRouter;

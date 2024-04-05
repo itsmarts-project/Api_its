@@ -51,3 +51,81 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
 
 } 
 
+export const editarSolicitante = async(req: Request, res: Response) => {
+
+    //Accede a los elementos de la peticion
+    const {id,reqSolicitante, reqDomicilio} = req.body;
+
+    try{
+        //Se inicia transaccion
+        const resultado = databaseConnection.transaction(async(t) => {
+
+            try{
+  //Se busca al solicitante por el id
+            const solicitante = await Solicitante.findByPk(id, {transaction: t});
+            //Si el solicitante no existe devuelve un error
+            if(!solicitante){
+                return res.status(401).send({
+                    msg: "El solicitante no existe"
+                });
+            }
+            //Busca el domicilio por la llave foranea del solicitante
+            const domicilio = await Domicilio.findByPk(solicitante.idSolicitante, {transaction: t});
+            //Si el solicitante no existe retorna un error
+            if(!domicilio){
+                return res.status(500).send({
+                    msg: "Error en el domicilio"
+                });
+            }
+            //Actualiza el solicitante
+            await solicitante.update(reqSolicitante);
+            //Actualiza el domicilio
+            await domicilio.update(reqDomicilio);
+
+            return {solicitante, domicilio}
+            }catch(e){
+                return res.status(500).send({
+                    msg: e
+                });
+            }
+          
+            
+        });
+
+        return res.send({
+            resultado
+        });
+
+    }catch(e){
+        return res.status(500).send({
+            msg: "Hubo un error"
+        })
+    }
+
+
+}
+
+export const cargarVisita = async(req: Request, res: Response) => {
+
+    const {id, estatus} = req.body;
+
+    try{
+
+        const solicitante = await Solicitante.findByPk(id);
+        if(!solicitante){
+            return res.status(401).send({
+                msg: "No existe"
+            });
+        }
+        await solicitante.update(estatus);
+        
+
+    }catch(e){
+        return res.status(500).send({
+            msg: "Hubo un error"
+        })
+    }
+
+
+}
+
