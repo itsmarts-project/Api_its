@@ -9,6 +9,9 @@ interface SolicitanteAttributes {
   genero: string;
   edad: string;
   correo: string;
+  estatusVisita: string;
+  montoAprobado: number;
+
 }
 
 export interface SolicitanteInstance extends Model<SolicitanteAttributes>, SolicitanteAttributes {}
@@ -43,6 +46,12 @@ const Solicitante = databaseConnection.define<SolicitanteInstance>("solicitante"
     type: DataTypes.STRING(45),
     allowNull: false,
     unique: true
+  },
+  estatusVisita: {
+    type: DataTypes.STRING
+  },
+  montoAprobado: {
+    type: DataTypes.DOUBLE
   }
 }, { timestamps: false, tableName: "solicitante", schema: "geoapoyos" });
 

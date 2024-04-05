@@ -35,6 +35,12 @@ const Solicitante = configdb_1.default.define("solicitante", {
         type: sequelize_1.DataTypes.STRING(45),
         allowNull: false,
         unique: true
+    },
+    estatusVisita: {
+        type: sequelize_1.DataTypes.STRING
+    },
+    montoAprobado: {
+        type: sequelize_1.DataTypes.DOUBLE
     }
 }, { timestamps: false, tableName: "solicitante", schema: "geoapoyos" });
 exports.default = Solicitante;
