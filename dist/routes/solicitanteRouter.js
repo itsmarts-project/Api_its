@@ -8,9 +8,7 @@ const solicitanteController_1 = require("../controller/solicitanteController");
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarEmail_1 = require("../middlewares/validarEmail");
 const solicitanteRouter = (0, express_1.Router)();
-solicitanteRouter.post("/registrar", [
-    validarToken_1.default,
-    validarEmail_1.validarCorreoSolicitante
-], solicitanteController_1.guardarSolicitante);
+solicitanteRouter.post("/registrar", solicitanteController_1.guardarSolicitante);
+solicitanteRouter.put("/editar", solicitanteController_1.editarSolicitante);
 exports.default = solicitanteRouter;
 //# sourceMappingURL=solicitanteRouter.js.map
