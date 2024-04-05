@@ -9,6 +9,7 @@ const express_validator_1 = require("express-validator");
 const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"));
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
+const validarEmail_1 = require("../middlewares/validarEmail");
 const userRouter = (0, express_1.Router)();
 /*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE
 ADMITE EL TOKEN VALIDO DE UN ADMINISTRADOR (AD)*/
@@ -21,20 +22,41 @@ userRouter.get("/", [
 "puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
 "fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
+    validarToken_1.default,
+    validarEmail_1.validarCorreoUsuario,
+    (0, validarRol_1.default)(["AD", "VA"]),
     (0, express_validator_1.body)('nombre').notEmpty(),
     (0, express_validator_1.body)('primerApellido').notEmpty(),
     (0, express_validator_1.body)('segundoApellido').notEmpty(),
     (0, express_validator_1.body)('puesto').notEmpty(),
     (0, express_validator_1.body)('fechaContratacion').notEmpty(),
-    (0, express_validator_1.body)('sueldo').notEmpty()
+    (0, express_validator_1.body)('sueldo').notEmpty(),
+    (0, express_validator_1.body)('correo').notEmpty(),
+    (0, express_validator_1.body)('contrasenia').notEmpty(),
+    ValidarErrores_1.default
 ], userController_1.registrarUsuario);
 /*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS
 LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
-userRouter.post("/editarUsuario", userController_1.editarUsuario);
+userRouter.post("/editarUsuario", [
+    validarToken_1.default,
+    (0, validarRol_1.default)(["AD"]),
+    (0, express_validator_1.body)('idUsuario').notEmpty(),
+    ValidarErrores_1.default
+], userController_1.editarUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/borrarUsuario", userController_1.borrarUsuario);
+userRouter.post("/borrarUsuario", [
+    validarToken_1.default,
+    (0, validarRol_1.default)(["AD"]),
+    (0, express_validator_1.body)('idUsuario').notEmpty(),
+    ValidarErrores_1.default
+], userController_1.borrarUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/bloquearUsuario", userController_1.bloquearUsuario);
+userRouter.post("/bloquearUsuario", [
+    validarToken_1.default,
+    (0, validarRol_1.default)(['AD']),
+    (0, express_validator_1.body)('idUsuario').notEmpty(),
+    ValidarErrores_1.default
+], userController_1.bloquearUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/desbloquearUsuario", userController_1.desbloquearUsuario);
 exports.default = userRouter;

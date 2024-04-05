@@ -1,50 +1,53 @@
-import { Request, Response } from "express";
-import Solicitante, { SolicitanteAttributes, SolicitanteInstance } from "../modelo/solicitante";
 
-export const agregarSolicitante = async (req: Request, res: Response) => {
-    const solicitantereq = req.body;
-  
-    try {
+import { Request, Response } from "express"
+import Solicitante from "../modelo/solicitante";
+import Domicilio from "../modelo/domicilio";
+import Formulario from "../modelo/formulario";
+import databaseConnection from "../database/configdb";
 
-        const solicitante = Solicitante.build(solicitantereq);
-        solicitante.save();
+export const guardarSolicitante = async(req: Request, res: Response) => {
 
+    //Se accede a los valores del request
+    const {solicitante, domicilio, formulario} = req.body;
+
+    try{
+        //Se inicia una transaccion
+        const resultados = await databaseConnection.transaction(async(t) => {
+
+            //Se guarda en base de datos el solicitante
+            const createSolicitante = await Solicitante.create(solicitante, {transaction: t});
+
+            //Se guarda en base de datos el domicilio con la llave foranea de solicitante
+            const createDomicilio = await Domicilio.create({
+                ...domicilio,
+                solicitante_idSolicitante: createSolicitante.idSolicitante
+            }, {transaction: t});
+
+            //Se guarda en base de datos el formulario con la llave foranea del solicitante
+            const createFormulario = await Formulario.create({
+                ...formulario,
+                solicitante_idSolicitante: createSolicitante.idSolicitante
+            }, {transaction: t});
+
+
+            //Se retornan los valores
+            return {
+                createSolicitante,
+                createDomicilio,
+                createFormulario
+            }
+
+
+        });
         res.send({
-            solicitante
+            resultados
         })
 
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({
-        error
-    })
+    }catch(e){
+        res.status(500).send({
+            msg: "Hubo un error"
+        })
     }
-  };
 
-  export const editarSolicitante = async (req: Request, res: Response) => {
-    const { idSolicitante, nombre, primerApellido, segundoApellido, genero, edad, correo } = req.body;
+} 
 
-    try {
-        // Buscar el usuario por su idUsuario
-        const solicitante = await Solicitante.findByPk(idSolicitante);
-
-        if (!solicitante) {
-            return res.status(404).send({ msg: 'Usuario no encontrado' });
-        }
-
-        // Actualizar los campos del usuario
-         solicitante.nombre = nombre || solicitante.nombre;
-         solicitante.primerApellido = primerApellido || solicitante.primerApellido;
-         solicitante.segundoApellido = segundoApellido || solicitante.segundoApellido;
-         solicitante.genero = genero || solicitante.genero;
-         solicitante.edad = edad || solicitante.edad;
-         solicitante.correo = correo || solicitante.correo;
-
-        // Guardar los cambios en la base de datos
-        await solicitante.save();
-
-        res.send({ solicitante });
-    } catch (e) {
-        return res.status(500).send({ e });
-    }
-};

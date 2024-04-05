@@ -43,9 +43,9 @@ class Server {
         });
     }
     routes() {
-        this.app.use("/usua", userRoutes_1.default);
+        this.app.use("/usuarios", userRoutes_1.default);
         this.app.use("/login", loginRouter_1.default);
-        this.app.use("/soli", solicitanteRouter_1.default);
+        this.app.use("/solicitante", solicitanteRouter_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {

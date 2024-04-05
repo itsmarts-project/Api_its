@@ -12,47 +12,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editarSolicitante = exports.agregarSolicitante = void 0;
+exports.guardarSolicitante = void 0;
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
-const agregarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const solicitantereq = req.body;
+const domicilio_1 = __importDefault(require("../modelo/domicilio"));
+const formulario_1 = __importDefault(require("../modelo/formulario"));
+const configdb_1 = __importDefault(require("../database/configdb"));
+const guardarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //Se accede a los valores del request
+    const { solicitante, domicilio, formulario } = req.body;
     try {
-        const solicitante = solicitante_1.default.build(solicitantereq);
-        solicitante.save();
+        //Se inicia una transaccion
+        const resultados = yield configdb_1.default.transaction((t) => __awaiter(void 0, void 0, void 0, function* () {
+            //Se guarda en base de datos el solicitante
+            const createSolicitante = yield solicitante_1.default.create(solicitante, { transaction: t });
+            //Se guarda en base de datos el domicilio con la llave foranea de solicitante
+            const createDomicilio = yield domicilio_1.default.create(Object.assign(Object.assign({}, domicilio), { solicitante_idSolicitante: createSolicitante.idSolicitante }), { transaction: t });
+            //Se guarda en base de datos el formulario con la llave foranea del solicitante
+            const createFormulario = yield formulario_1.default.create(Object.assign(Object.assign({}, formulario), { solicitante_idSolicitante: createSolicitante.idSolicitante }), { transaction: t });
+            //Se retornan los valores
+            return {
+                createSolicitante,
+                createDomicilio,
+                createFormulario
+            };
+        }));
         res.send({
-            solicitante
+            resultados
         });
-    }
-    catch (error) {
-        console.error(error);
-        return res.status(500).send({
-            error
-        });
-    }
-});
-exports.agregarSolicitante = agregarSolicitante;
-const editarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idSolicitante, nombre, primerApellido, segundoApellido, genero, edad, correo } = req.body;
-    try {
-        // Buscar el usuario por su idUsuario
-        const solicitante = yield solicitante_1.default.findByPk(idSolicitante);
-        if (!solicitante) {
-            return res.status(404).send({ msg: 'Usuario no encontrado' });
-        }
-        // Actualizar los campos del usuario
-        solicitante.nombre = nombre || solicitante.nombre;
-        solicitante.primerApellido = primerApellido || solicitante.primerApellido;
-        solicitante.segundoApellido = segundoApellido || solicitante.segundoApellido;
-        solicitante.genero = genero || solicitante.genero;
-        solicitante.edad = edad || solicitante.edad;
-        solicitante.correo = correo || solicitante.correo;
-        // Guardar los cambios en la base de datos
-        yield solicitante.save();
-        res.send({ solicitante });
     }
     catch (e) {
-        return res.status(500).send({ e });
+        res.status(500).send({
+            msg: "Hubo un error"
+        });
     }
 });
-exports.editarSolicitante = editarSolicitante;
+exports.guardarSolicitante = guardarSolicitante;
 //# sourceMappingURL=solicitanteController.js.map
