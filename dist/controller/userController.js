@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bloquearUsuario = exports.borrarUsuario = exports.editarUsuario = exports.registrarUsuario = exports.getUsuario = void 0;
+exports.bloquearUsuario = exports.borrarUsuario = exports.editarUsuario = exports.registrarUsuario = exports.getRolUsuario = exports.getUsuario = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const usuario_1 = __importDefault(require("../modelo/usuario"));
 const getUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,6 +29,26 @@ const getUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getUsuario = getUsuario;
+const getRolUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { correo } = req.body;
+    try {
+        const usuario = yield usuario_1.default.findOne({ where: { correo } });
+        if (!usuario) {
+            return res.status(404).send({
+                msg: "El usuario no existe"
+            });
+        }
+        return res.send({
+            rol: usuario.puesto
+        });
+    }
+    catch (e) {
+        return res.status(500).send({
+            msg: "Chinga tu madre alexis"
+        });
+    }
+});
+exports.getRolUsuario = getRolUsuario;
 const registrarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarioreq = req.body;
     try {

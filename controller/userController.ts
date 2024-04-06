@@ -19,6 +19,30 @@ export const getUsuario = async(req: Request, res: Response) => {
 
 }
 
+
+export const getRolUsuario = async(req: Request, res: Response) => {
+    const {correo} = req.body;
+
+    try{
+
+        const usuario = await Usuario.findOne({where: {correo}});
+
+        if(!usuario){
+            return res.status(404).send({
+                msg: "El usuario no existe"
+            })
+        }
+
+        return res.send({
+            rol: usuario.puesto
+        });
+    }catch(e){
+        return res.status(500).send({
+            msg: "Chinga tu madre alexis"
+        });
+    }
+}
+
 export const registrarUsuario = async(req: Request, res: Response) => {
 
     const usuarioreq = req.body;

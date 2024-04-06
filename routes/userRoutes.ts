@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { bloquearUsuario, borrarUsuario, editarUsuario, getUsuario, registrarUsuario } from "../controller/userController";
+import { bloquearUsuario, borrarUsuario, editarUsuario, getRolUsuario, getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
 import validarJWT from "../middlewares/validarToken";
@@ -7,6 +7,13 @@ import validarRol from "../middlewares/validarRol";
 import {validarCorreoUsuario} from "../middlewares/validarEmail";
 
 const userRouter = Router();
+
+//METODO GET QUE RECIBE UN CORREO ELECTRONICO Y DEVUELVE EL ROL
+userRouter.get("/traerRolUsuario",[
+    validarJWT,
+    body('correo').notEmpty().isEmail(),
+    validarCampos
+] ,getRolUsuario);
 
 
 /*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE 

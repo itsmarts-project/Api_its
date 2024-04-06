@@ -11,6 +11,12 @@ const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
 const validarEmail_1 = require("../middlewares/validarEmail");
 const userRouter = (0, express_1.Router)();
+//METODO GET QUE RECIBE UN CORREO ELECTRONICO Y DEVUELVE EL ROL
+userRouter.get("/traerRolUsuario", [
+    validarToken_1.default,
+    (0, express_validator_1.body)('correo').notEmpty().isEmail(),
+    ValidarErrores_1.default
+], userController_1.getRolUsuario);
 /*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE
 ADMITE EL TOKEN VALIDO DE UN ADMINISTRADOR (AD)*/
 userRouter.get("/", [
