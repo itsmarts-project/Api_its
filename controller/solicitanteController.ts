@@ -64,7 +64,7 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
 
     }catch(e){
         res.status(500).send({
-            msg: "Hubo un error"
+            msg: e
         })
     }
 
