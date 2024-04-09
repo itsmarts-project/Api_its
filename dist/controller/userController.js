@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.bloquearUsuario = exports.borrarUsuario = exports.editarUsuario = exports.registrarUsuario = exports.getRolUsuario = exports.getUsuario = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const usuario_1 = __importDefault(require("../modelo/usuario"));
-const getUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getUsuario = async (req, res) => {
     try {
-        const usuario = yield usuario_1.default.findAll();
+        const usuario = await usuario_1.default.findAll();
         res.send({
             usuario
         });
@@ -27,12 +18,12 @@ const getUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             msg: e
         });
     }
-});
+};
 exports.getUsuario = getUsuario;
-const getRolUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getRolUsuario = async (req, res) => {
     const { correo } = req.body;
     try {
-        const usuario = yield usuario_1.default.findOne({ where: { correo } });
+        const usuario = await usuario_1.default.findOne({ where: { correo } });
         if (!usuario) {
             return res.status(404).send({
                 msg: "El usuario no existe"
@@ -47,9 +38,9 @@ const getRolUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             msg: "Chinga tu madre alexis"
         });
     }
-});
+};
 exports.getRolUsuario = getRolUsuario;
-const registrarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const registrarUsuario = async (req, res) => {
     const usuarioreq = req.body;
     try {
         const salt = bcryptjs_1.default.genSaltSync(10);
@@ -66,13 +57,13 @@ const registrarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, functio
             e
         });
     }
-});
+};
 exports.registrarUsuario = registrarUsuario;
-const editarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const editarUsuario = async (req, res) => {
     const { idUsuario, nombre, primerApellido, segundoApellido, puesto, fechaContratacion, sueldo, correo, contrasenia } = req.body;
     try {
         // Buscar el usuario por su idUsuario
-        const usuario = yield usuario_1.default.findByPk(idUsuario);
+        const usuario = await usuario_1.default.findByPk(idUsuario);
         if (!usuario) {
             return res.status(404).send({ msg: 'Usuario no encontrado' });
         }
@@ -91,50 +82,50 @@ const editarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             usuario.contrasenia = password;
         }
         // Guardar los cambios en la base de datos
-        yield usuario.save();
+        await usuario.save();
         res.send({ usuario });
     }
     catch (e) {
         return res.status(500).send({ e });
     }
-});
+};
 exports.editarUsuario = editarUsuario;
-const borrarUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const borrarUsuario = async (req, res) => {
     const { idUsuario } = req.body;
     try {
         // Buscar el usuario por su idUsuario
-        const usuario = yield usuario_1.default.findByPk(idUsuario);
+        const usuario = await usuario_1.default.findByPk(idUsuario);
         if (!usuario) {
             return res.status(404).send({ msg: "Usuario no encontrado" });
         }
         // Cambiar el estatus del usuario a "BA" (baja)
         usuario.estatus = "BA";
         // Guardar los cambios en la base de datos
-        yield usuario.save();
+        await usuario.save();
         res.send({ usuario });
     }
     catch (e) {
         return res.status(500).send({ e });
     }
-});
+};
 exports.borrarUsuario = borrarUsuario;
-const bloquearUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const bloquearUsuario = async (req, res) => {
     const { idUsuario } = req.body;
     try {
         // Buscar el usuario por su idUsuario
-        const usuario = yield usuario_1.default.findByPk(idUsuario);
+        const usuario = await usuario_1.default.findByPk(idUsuario);
         if (!usuario) {
             return res.status(404).send({ msg: "Usuario no encontrado" });
         }
         // Cambiar el estatus del usuario a "BA" (baja)
         usuario.estatus = "BL";
         // Guardar los cambios en la base de datos
-        yield usuario.save();
+        await usuario.save();
         res.send({ usuario });
     }
     catch (e) {
         return res.status(500).send({ e });
     }
-});
+};
 exports.bloquearUsuario = bloquearUsuario;
 //# sourceMappingURL=userController.js.map
