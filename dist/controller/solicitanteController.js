@@ -12,11 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cargarVisita = exports.editarSolicitante = exports.guardarSolicitante = void 0;
+exports.cargarVisita = exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
+const getUsuariosPorVisitar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const solicitante = solicitante_1.default.findAll({ where: {} });
+    }
+    catch (e) {
+        return res.status(500).send({
+            msg: "Hubo un error"
+        });
+    }
+});
+exports.getUsuariosPorVisitar = getUsuariosPorVisitar;
 const guardarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //Se accede a los valores del request
     const { solicitante, domicilio, formulario } = req.body;

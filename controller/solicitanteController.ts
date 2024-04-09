@@ -5,6 +5,25 @@ import Domicilio from "../modelo/domicilio";
 import Formulario from "../modelo/formulario";
 import databaseConnection from "../database/configdb";
 
+
+export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
+
+
+    try{
+
+        const solicitante = Solicitante.findAll({where: {}})
+
+    }catch(e){
+
+        return res.status(500).send({
+            msg : "Hubo un error"
+        });
+    }
+
+}
+
+
+
 export const guardarSolicitante = async(req: Request, res: Response) => {
 
     //Se accede a los valores del request
