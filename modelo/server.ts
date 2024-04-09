@@ -4,6 +4,7 @@ import databaseConnection  from '../database/configdb';
 import userRouter from '../routes/userRoutes';
 import loginRouter from '../routes/loginRouter';
 import solicitanteRouter from '../routes/solicitanteRouter';
+import visitaRouter from '../routes/visitaRouter';
 
 export class Server{
     private app: Application;
@@ -37,6 +38,7 @@ export class Server{
         this.app.use("/usuarios", userRouter);
         this.app.use("/login",loginRouter);
         this.app.use("/solicitante", solicitanteRouter);
+        this.app.use("/visita", visitaRouter);
     }
 
     listen(){

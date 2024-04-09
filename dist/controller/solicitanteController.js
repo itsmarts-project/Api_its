@@ -42,7 +42,7 @@ const guardarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
     catch (e) {
         res.status(500).send({
-            msg: "Hubo un error"
+            msg: e
         });
     }
 });

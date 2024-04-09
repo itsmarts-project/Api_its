@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import databaseConnection from "../database/configdb";
+import { now } from "sequelize/types/utils";
 
 interface SolicitanteAttributes {
   idSolicitante: number;
@@ -9,7 +10,7 @@ interface SolicitanteAttributes {
   genero: string;
   edad: string;
   correo: string;
-  estatusVisita: string;
+  fechaAlta: string;
   montoAprobado: number;
 
 }
@@ -47,11 +48,13 @@ const Solicitante = databaseConnection.define<SolicitanteInstance>("solicitante"
     allowNull: false,
     unique: true
   },
-  estatusVisita: {
-    type: DataTypes.STRING
+  fechaAlta: {
+    type: DataTypes.DATE,
+    defaultValue: new Date()
   },
   montoAprobado: {
-    type: DataTypes.DOUBLE
+    type: DataTypes.DOUBLE,
+    defaultValue: 0.0
   }
 }, { timestamps: false, tableName: "solicitante", schema: "geoapoyos" });
 

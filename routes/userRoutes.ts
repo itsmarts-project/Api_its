@@ -22,9 +22,7 @@ userRouter.get("/", [
 "puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
 "fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
-    validarJWT,
-    validarCorreoUsuario,
-    validarRol(["AD","VA"]),
+
     body('nombre').notEmpty(),
     body('primerApellido').notEmpty(),
     body('segundoApellido').notEmpty(),
