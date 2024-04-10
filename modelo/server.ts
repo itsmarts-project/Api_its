@@ -3,6 +3,9 @@ import cors from 'cors';
 import databaseConnection  from '../database/configdb';
 import userRouter from '../routes/userRoutes';
 import loginRouter from '../routes/loginRouter';
+import Router from '../routes/loginRouter';
+import repartidorRouter from '../routes/repartidorRouter';
+import envioRouter from '../routes/envioRouter';
 //import solicitanteRouter from '../routes/solicitanteRouter';
 
 export class Server{
@@ -36,6 +39,10 @@ export class Server{
     routes(){
         this.app.use("/user", userRouter);
         this.app.use("/login", loginRouter);
+        this.app.use("/repartidor", repartidorRouter);
+        this.app.use("/envio", envioRouter);
+
+
         //this.app.use("/soli", solicitanteRouter)
     }
 
