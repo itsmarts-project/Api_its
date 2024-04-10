@@ -5,6 +5,28 @@ import Domicilio from "../modelo/domicilio";
 import Formulario from "../modelo/formulario";
 import databaseConnection from "../database/configdb";
 
+
+export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
+
+
+    try{
+
+        const solicitante = await Solicitante.findAll();
+        return res.send({
+            solicitante
+        })
+
+    }catch(e){
+
+        return res.status(500).send({
+            msg : "Hubo un error"
+        });
+    }
+
+}
+
+
+
 export const guardarSolicitante = async(req: Request, res: Response) => {
 
     //Se accede a los valores del request
@@ -45,7 +67,7 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
 
     }catch(e){
         res.status(500).send({
-            msg: "Hubo un error"
+            msg: e
         })
     }
 
@@ -95,30 +117,6 @@ export const editarSolicitante = async(req: Request, res: Response) => {
         return res.send({
             resultado
         });
-
-    }catch(e){
-        return res.status(500).send({
-            msg: "Hubo un error"
-        })
-    }
-
-
-}
-
-export const cargarVisita = async(req: Request, res: Response) => {
-
-    const {id, estatus} = req.body;
-
-    try{
-
-        const solicitante = await Solicitante.findByPk(id);
-        if(!solicitante){
-            return res.status(401).send({
-                msg: "No existe"
-            });
-        }
-        await solicitante.update(estatus);
-        
 
     }catch(e){
         return res.status(500).send({

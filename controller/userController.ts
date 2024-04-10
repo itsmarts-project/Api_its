@@ -19,6 +19,30 @@ export const getUsuario = async(req: Request, res: Response) => {
 
 }
 
+
+export const getRolUsuario = async(req: Request, res: Response) => {
+    const {correo} = req.body;
+
+    try{
+
+        const usuario = await Usuario.findOne({where: {correo}});
+
+        if(!usuario){
+            return res.status(404).send({
+                msg: "El usuario no existe"
+            })
+        }
+
+        return res.send({
+            rol: usuario.puesto
+        });
+    }catch(e){
+        return res.status(500).send({
+            msg: "Chinga tu madre alexis"
+        });
+    }
+}
+
 export const registrarUsuario = async(req: Request, res: Response) => {
 
     const usuarioreq = req.body;
@@ -45,7 +69,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
 }
 
 export const editarUsuario = async (req: Request, res: Response) => {
-    const { idUsuario, nombre, primerApellido, segundoApellido, puesto, fechaContratacion, sueldo, correo, contrasenia } = req.body;
+    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia } = req.body;
 
     try {
         // Buscar el usuario por su idUsuario
@@ -60,9 +84,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
         usuario.primerApellido = primerApellido || usuario.primerApellido;
         usuario.segundoApellido = segundoApellido || usuario.segundoApellido;
         usuario.puesto = puesto || usuario.puesto;
-        usuario.fechaContratacion = fechaContratacion || usuario.fechaContratacion;
         usuario.sueldo = sueldo || usuario.sueldo;
-        usuario.correo = correo || usuario.correo;
 
         // Si se proporciona una nueva contraseña, hash it
         if (contrasenia) {

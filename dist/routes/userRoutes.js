@@ -9,8 +9,13 @@ const express_validator_1 = require("express-validator");
 const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"));
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
-const validarEmail_1 = require("../middlewares/validarEmail");
 const userRouter = (0, express_1.Router)();
+//METODO GET QUE RECIBE UN CORREO ELECTRONICO Y DEVUELVE EL ROL
+userRouter.get("/traerRolUsuario", [
+    validarToken_1.default,
+    (0, express_validator_1.body)('correo').notEmpty().isEmail(),
+    ValidarErrores_1.default
+], userController_1.getRolUsuario);
 /*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE
 ADMITE EL TOKEN VALIDO DE UN ADMINISTRADOR (AD)*/
 userRouter.get("/", [
@@ -22,9 +27,6 @@ userRouter.get("/", [
 "puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
 "fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
-    validarToken_1.default,
-    validarEmail_1.validarCorreoUsuario,
-    (0, validarRol_1.default)(["AD", "VA"]),
     (0, express_validator_1.body)('nombre').notEmpty(),
     (0, express_validator_1.body)('primerApellido').notEmpty(),
     (0, express_validator_1.body)('segundoApellido').notEmpty(),
