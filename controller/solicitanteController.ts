@@ -11,7 +11,10 @@ export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
 
     try{
 
-        const solicitante = Solicitante.findAll({where: {}})
+        const solicitante = await Solicitante.findAll();
+        return res.send({
+            solicitante
+        })
 
     }catch(e){
 

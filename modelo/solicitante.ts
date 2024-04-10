@@ -12,6 +12,9 @@ interface SolicitanteAttributes {
   correo: string;
   fechaAlta: string;
   montoAprobado: number;
+  estatus: string;
+  montoSolicitado: number;
+  universidad: string;
 
 }
 
@@ -55,6 +58,17 @@ const Solicitante = databaseConnection.define<SolicitanteInstance>("solicitante"
   montoAprobado: {
     type: DataTypes.DOUBLE,
     defaultValue: 0.0
+  },
+  montoSolicitado: {
+    type: DataTypes.DOUBLE,
+    defaultValue: 0.0
+  },
+  estatus: {
+    type:  DataTypes.STRING,
+    defaultValue: "AC"
+  },
+  universidad: {
+    type: DataTypes.STRING
   }
 }, { timestamps: false, tableName: "solicitante", schema: "geoapoyos" });
 

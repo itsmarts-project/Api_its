@@ -10,7 +10,10 @@ const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
 const getUsuariosPorVisitar = async (req, res) => {
     try {
-        const solicitante = solicitante_1.default.findAll({ where: {} });
+        const solicitante = await solicitante_1.default.findAll();
+        return res.send({
+            solicitante
+        });
     }
     catch (e) {
         return res.status(500).send({

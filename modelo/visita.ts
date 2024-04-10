@@ -14,6 +14,7 @@ interface VisitaAttributes {
     hora: Date;
     fotoDomicilio: string;
     fotoIdentidicacion: string;
+    fechaVisita: Date;
     solicitante_idSolicitante: number;
     usuario_idUsuario: number;
 }
@@ -61,6 +62,10 @@ const Visita = databaseConnection.define<VisitaInstance>("visita", {
   fotoIdentidicacion: {
     type: DataTypes.STRING,
     defaultValue: "Sin capturar"
+  },
+  fechaVisita: {
+    type: DataTypes.DATE,
+    defaultValue: new Date()
   },
   solicitante_idSolicitante: {
     type: DataTypes.INTEGER,
