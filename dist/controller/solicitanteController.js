@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cargarVisita = exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
+exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
@@ -101,22 +101,4 @@ const editarSolicitante = async (req, res) => {
     }
 };
 exports.editarSolicitante = editarSolicitante;
-const cargarVisita = async (req, res) => {
-    const { id, estatus } = req.body;
-    try {
-        const solicitante = await solicitante_1.default.findByPk(id);
-        if (!solicitante) {
-            return res.status(401).send({
-                msg: "No existe"
-            });
-        }
-        await solicitante.update(estatus);
-    }
-    catch (e) {
-        return res.status(500).send({
-            msg: "Hubo un error"
-        });
-    }
-};
-exports.cargarVisita = cargarVisita;
 //# sourceMappingURL=solicitanteController.js.map

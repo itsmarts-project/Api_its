@@ -69,6 +69,14 @@ export const getVisitasPendientes = async(req: Request, res: Response) => {
 export const agregarEstatusVisita = async(req: Request, res: Response) => {
 
     const {id,estatus, razon} = req.body;
+    const fotoCasa:UploadedFile | UploadedFile[] | undefined = req.files?.fotoCasa;
+    console.log(fotoCasa);
+
+    try{
+    if (!fotoCasa || Array.isArray(fotoCasa)) {
+        return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+    }
+    const foto:any = await subirArchivo(fotoCasa, ['img','jpg','png'], 'casas');
 
     if(estatus === false || estatus === false || razon === false || id === false){
         return res.status(401).send({
@@ -88,26 +96,26 @@ export const agregarEstatusVisita = async(req: Request, res: Response) => {
             msg: "Registro no encontrado"
         });
     }
-    const establecerEstatus = await visita.update({estatus: estatus, razon: razon});
+    const establecerEstatus = await visita.update({fotoDomicilio: foto, estatus: estatus, razon: razon });
 
     return res.send({
-        visita
+        establecerEstatus
     });
 
-
+    }catch(e){
+        return res.status(500).send({
+            e
+        })
+    }
 
 
 }
 
 export const confirmarVisita = async(req: Request, res: Response) => {
 
-    const {id} = req.body;
-    const fotoCasa:UploadedFile | UploadedFile[] | undefined = req.files?.fotoCasa;
-    console.log(fotoCasa);
+    const {id, fecha, hora , latitud, longitud} = req.body;
+ 
 
-    if (!fotoCasa || Array.isArray(fotoCasa)) {
-        return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
-    }
 
     if(!id){
         return res.status(404).send({
@@ -116,8 +124,6 @@ export const confirmarVisita = async(req: Request, res: Response) => {
     }
 
     try{
-        
-        const foto:any = await subirArchivo(fotoCasa, ['img','jpg','png'], 'casas');
 
         const solicitante = await Solicitante.findByPk(id);
 
@@ -134,11 +140,11 @@ export const confirmarVisita = async(req: Request, res: Response) => {
             });
         }
 
-        await visita.update({fotoDomicilio: foto});
+        await visita.update({confirmacionSolicitante: true, estatus: "EN", razon: "Encontrado", fecha: fecha, hora: hora, latitudVisita: latitud, longitudVisita: longitud });
     
 
         return res.send({
-            foto
+           visita
         })
 
 

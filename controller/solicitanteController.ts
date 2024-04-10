@@ -124,27 +124,3 @@ export const editarSolicitante = async(req: Request, res: Response) => {
 
 }
 
-export const cargarVisita = async(req: Request, res: Response) => {
-
-    const {id, estatus} = req.body;
-
-    try{
-
-        const solicitante = await Solicitante.findByPk(id);
-        if(!solicitante){
-            return res.status(401).send({
-                msg: "No existe"
-            });
-        }
-        await solicitante.update(estatus);
-        
-
-    }catch(e){
-        return res.status(500).send({
-            msg: "Hubo un error"
-        })
-    }
-
-
-}
-

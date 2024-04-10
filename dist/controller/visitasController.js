@@ -70,43 +70,50 @@ const getVisitasPendientes = async (req, res) => {
 exports.getVisitasPendientes = getVisitasPendientes;
 const agregarEstatusVisita = async (req, res) => {
     const { id, estatus, razon } = req.body;
-    if (estatus === false || estatus === false || razon === false || id === false) {
-        return res.status(401).send({
-            msg: "Estatus vacio"
+    const fotoCasa = req.files?.fotoCasa;
+    console.log(fotoCasa);
+    try {
+        if (!fotoCasa || Array.isArray(fotoCasa)) {
+            return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+        }
+        const foto = await (0, subirFoto_1.subirArchivo)(fotoCasa, ['img', 'jpg', 'png'], 'casas');
+        if (estatus === false || estatus === false || razon === false || id === false) {
+            return res.status(401).send({
+                msg: "Estatus vacio"
+            });
+        }
+        const solicitante = await solicitante_1.default.findByPk(id);
+        if (!solicitante) {
+            return res.status(404).send({
+                msg: "Solicitante no encontrado"
+            });
+        }
+        const visita = await visita_1.default.findOne({ where: { solicitante_idSolicitante: solicitante.idSolicitante } });
+        if (!visita) {
+            return res.status(404).send({
+                msg: "Registro no encontrado"
+            });
+        }
+        const establecerEstatus = await visita.update({ fotoDomicilio: foto, estatus: estatus, razon: razon });
+        return res.send({
+            establecerEstatus
         });
     }
-    const solicitante = await solicitante_1.default.findByPk(id);
-    if (!solicitante) {
-        return res.status(404).send({
-            msg: "Solicitante no encontrado"
+    catch (e) {
+        return res.status(500).send({
+            e
         });
     }
-    const visita = await visita_1.default.findOne({ where: { solicitante_idSolicitante: solicitante.idSolicitante } });
-    if (!visita) {
-        return res.status(404).send({
-            msg: "Registro no encontrado"
-        });
-    }
-    const establecerEstatus = await visita.update({ estatus: estatus, razon: razon });
-    return res.send({
-        visita
-    });
 };
 exports.agregarEstatusVisita = agregarEstatusVisita;
 const confirmarVisita = async (req, res) => {
-    const { id } = req.body;
-    const fotoCasa = req.files?.fotoCasa;
-    console.log(fotoCasa);
-    if (!fotoCasa || Array.isArray(fotoCasa)) {
-        return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
-    }
+    const { id, fecha, hora, latitud, longitud } = req.body;
     if (!id) {
         return res.status(404).send({
             msg: "id no especificado"
         });
     }
     try {
-        const foto = await (0, subirFoto_1.subirArchivo)(fotoCasa, ['img', 'jpg', 'png'], 'casas');
         const solicitante = await solicitante_1.default.findByPk(id);
         if (!solicitante) {
             return res.status(404).send({
@@ -119,9 +126,9 @@ const confirmarVisita = async (req, res) => {
                 msg: "Hubo un error"
             });
         }
-        await visita.update({ fotoDomicilio: foto });
+        await visita.update({ confirmacionSolicitante: true, estatus: "EN", razon: "Encontrado", fecha: fecha, hora: hora, latitudVisita: latitud, longitudVisita: longitud });
         return res.send({
-            foto
+            visita
         });
     }
     catch (e) {
