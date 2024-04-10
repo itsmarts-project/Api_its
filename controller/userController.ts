@@ -44,7 +44,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
     }
 }
 
-export const editarUsuario = async (req: Request, res: Response) => {
+/*export const editarUsuario = async (req: Request, res: Response) => {
     const { idUsuario, nombre, primerApellido, segundoApellido, puesto, fechaContratacion, sueldo, correo, contrasenia } = req.body;
 
     try {
@@ -59,9 +59,6 @@ export const editarUsuario = async (req: Request, res: Response) => {
         usuario.nombre = nombre || usuario.nombre;
         usuario.primerApellido = primerApellido || usuario.primerApellido;
         usuario.segundoApellido = segundoApellido || usuario.segundoApellido;
-        usuario.puesto = puesto || usuario.puesto;
-        usuario.fechaContratacion = fechaContratacion || usuario.fechaContratacion;
-        usuario.sueldo = sueldo || usuario.sueldo;
         usuario.correo = correo || usuario.correo;
 
         // Si se proporciona una nueva contraseña, hash it
@@ -79,6 +76,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
         return res.status(500).send({ e });
     }
 };
+
 
 export const borrarUsuario = async (req: Request, res: Response) => {
     const { idUsuario } = req.body;
@@ -148,3 +146,4 @@ export const borrarUsuario = async (req: Request, res: Response) => {
       return res.status(500).send({ e });
     }
   };
+*/

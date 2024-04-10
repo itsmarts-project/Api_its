@@ -26,12 +26,12 @@ const validarJWT = async(req: Request, res: Response, next:any) => {
             });
         }
 
-        //VALIDA QUE EL USUARIO ESTE ACTIVO
-        if(usuarioValidado.estado === "BA"){
-            return res.status(401).send({
-                msg: "token no valido"
-            })
-        }
+        // //VALIDA QUE EL USUARIO ESTE ACTIVO
+        // if(usuarioValidado.estado === "BA"){
+        //     return res.status(401).send({
+        //         msg: "token no valido"
+        //     })
+        // }
 
         (req as any).usuario = usuarioValidado;
         next();

@@ -20,26 +20,12 @@ const Usuario = configdb_1.default.define("usuario", {
     segundoApellido: {
         type: sequelize_1.DataTypes.STRING
     },
-    puesto: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false
-    },
-    fechaContratacion: {
-        type: sequelize_1.DataTypes.DATEONLY
-    },
-    sueldo: {
-        type: sequelize_1.DataTypes.FLOAT
-    },
     correo: {
         type: sequelize_1.DataTypes.STRING
     },
     contrasenia: {
         type: sequelize_1.DataTypes.STRING
     },
-    estatus: {
-        type: sequelize_1.DataTypes.STRING,
-        defaultValue: 'AC'
-    }
-}, { timestamps: false, tableName: "usuario", schema: "geoapoyos" });
+}, { timestamps: false, tableName: "usuario", schema: "packetpong" });
 exports.default = Usuario;
 //# sourceMappingURL=usuario.js.map

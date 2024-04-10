@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-const databaseConnection = new Sequelize('itsmarts', 'postgres', 'root', {
+const databaseConnection = new Sequelize('packetpong', 'postgres', 'root', {
     host:'localhost',
     dialect: 'postgres'
 });
