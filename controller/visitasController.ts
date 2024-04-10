@@ -5,28 +5,58 @@ import * as path from "path";
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import Visita from "../modelo/visita"
-import Solicitante from "../modelo/solicitante";
+import Solicitante from '../modelo/solicitante';
 import { subirArchivo } from "../helpers/subirFoto";
 import Usuario from "../modelo/usuario";
+import Domicilio from "../modelo/domicilio";
 
 
 
 
 export const getVisitasPendientes = async(req: Request, res: Response) => {
 
-
+    const {id} = req.body;
     try{
-        const visitas = await Visita.findAll({where: { confirmacionSolicitante: false }});
+        
+        const usuario = await Usuario.findByPk(id);
 
-        if(!visitas){
+        if(!usuario){
             return res.status(404).send({
-                msg: "Visitas no registradas"
-            });
+                msg: "El usuario no existe"
+            })
         }
 
+        const visitas = await Visita.findAll({where: {usuario_idUsuario: usuario.idUsuario}});
+        
+
+        const solicitantes: any[] = [];
+        const domicilios: any[] = [];
+
+      
+        for(let e of visitas){
+            const solicitante = await Solicitante.findOne({where: {idSolicitante: e.solicitante_idSolicitante}});
+            solicitantes.push(solicitante);
+
+            const domicilio = await Domicilio.findOne({where: {solicitante_idSolicitante: solicitante?.idSolicitante}});
+            domicilios.push(domicilio);
+
+        }
+        
+
+        console.log(solicitantes);
+        console.log(domicilios);
+        
+       
+
+
         return res.send({
-            visitas
+            usuario,
+            visitas,
+            solicitantes,
+            domicilios
+
         })
+        
 
     }catch(e){
         return res.status(500).send({
@@ -147,10 +177,15 @@ export const getFotoDomicilio = async(req: Request, res: Response) => {
             if(fs.existsSync(imagePath)){
                return res.sendFile(imagePath);
             }
+
            return res.status(404).send({
                 msg: "No image"
             })
         }
+
+        return res.status(404).send({
+            msg: "No image"
+        })
         
 
     }catch(e){

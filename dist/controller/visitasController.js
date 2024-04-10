@@ -32,16 +32,33 @@ const fs_1 = __importDefault(require("fs"));
 const visita_1 = __importDefault(require("../modelo/visita"));
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const subirFoto_1 = require("../helpers/subirFoto");
+const usuario_1 = __importDefault(require("../modelo/usuario"));
+const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const getVisitasPendientes = async (req, res) => {
+    const { id } = req.body;
     try {
-        const visitas = await visita_1.default.findAll({ where: { confirmacionSolicitante: false } });
-        if (!visitas) {
+        const usuario = await usuario_1.default.findByPk(id);
+        if (!usuario) {
             return res.status(404).send({
-                msg: "Visitas no registradas"
+                msg: "El usuario no existe"
             });
         }
+        const visitas = await visita_1.default.findAll({ where: { usuario_idUsuario: usuario.idUsuario } });
+        const solicitantes = [];
+        const domicilios = [];
+        for (let e of visitas) {
+            const solicitante = await solicitante_1.default.findOne({ where: { idSolicitante: e.solicitante_idSolicitante } });
+            solicitantes.push(solicitante);
+            const domicilio = await domicilio_1.default.findOne({ where: { solicitante_idSolicitante: solicitante?.idSolicitante } });
+            domicilios.push(domicilio);
+        }
+        console.log(solicitantes);
+        console.log(domicilios);
         return res.send({
-            visitas
+            usuario,
+            visitas,
+            solicitantes,
+            domicilios
         });
     }
     catch (e) {
@@ -140,6 +157,9 @@ const getFotoDomicilio = async (req, res) => {
                 msg: "No image"
             });
         }
+        return res.status(404).send({
+            msg: "No image"
+        });
     }
     catch (e) {
         return res.status(500).send({
