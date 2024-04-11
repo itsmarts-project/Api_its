@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bloquearUsuario = exports.borrarUsuario = exports.editarUsuario = exports.registrarUsuario = exports.getUsuario = void 0;
+exports.desbloquearUsuario = exports.bloquearUsuario = exports.borrarUsuario = exports.editarUsuario = exports.registrarUsuario = exports.getRolUsuario = exports.getUsuario = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const usuario_1 = __importDefault(require("../modelo/usuario"));
 const getUsuario = async (req, res) => {
@@ -126,23 +126,23 @@ const bloquearUsuario = async (req, res) => {
     }
 };
 exports.bloquearUsuario = bloquearUsuario;
-const desbloquearUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const desbloquearUsuario = async (req, res) => {
     const { idUsuario } = req.body;
     try {
         // Buscar el usuario por su idUsuario
-        const usuario = yield usuario_1.default.findByPk(idUsuario);
+        const usuario = await usuario_1.default.findByPk(idUsuario);
         if (!usuario) {
             return res.status(404).send({ msg: "Usuario no encontrado" });
         }
         // Cambiar el estatus del usuario a "BA" (baja)
         usuario.estatus = "AC";
         // Guardar los cambios en la base de datos
-        yield usuario.save();
+        await usuario.save();
         res.send({ usuario });
     }
     catch (e) {
         return res.status(500).send({ e });
     }
-});
+};
 exports.desbloquearUsuario = desbloquearUsuario;
 //# sourceMappingURL=userController.js.map

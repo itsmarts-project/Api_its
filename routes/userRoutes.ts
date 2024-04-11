@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { bloquearUsuario, borrarUsuario, editarUsuario, getRolUsuario, getUsuario, registrarUsuario } from "../controller/userController";
+import { desbloquearUsuario, bloquearUsuario, borrarUsuario, editarUsuario, getRolUsuario, getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
 import validarJWT from "../middlewares/validarToken";
