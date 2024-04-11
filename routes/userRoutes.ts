@@ -9,10 +9,7 @@ import {validarCorreoUsuario} from "../middlewares/validarEmail";
 const userRouter = Router();
 
 //METODO GET QUE RECIBE UN CORREO ELECTRONICO Y DEVUELVE EL ROL
-userRouter.get("/traerRolUsuario",[
-    validarJWT,
-    body('correo').notEmpty().isEmail(),
-    validarCampos
+userRouter.post("/traerRolUsuario",[
 ] ,getRolUsuario);
 
 

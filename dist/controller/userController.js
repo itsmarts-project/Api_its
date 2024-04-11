@@ -30,12 +30,12 @@ const getRolUsuario = async (req, res) => {
             });
         }
         return res.send({
-            rol: usuario.puesto
+            usuario
         });
     }
     catch (e) {
         return res.status(500).send({
-            msg: "Chinga tu madre alexis"
+            msg: "Hubo un error"
         });
     }
 };

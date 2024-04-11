@@ -6,6 +6,7 @@ import userRouter from '../routes/userRoutes';
 import loginRouter from '../routes/loginRouter';
 import solicitanteRouter from '../routes/solicitanteRouter';
 import visitaRouter from '../routes/visitaRouter';
+import becaRouter from '../routes/becaRouter';
 
 export class Server{
     private app: Application;
@@ -41,10 +42,11 @@ export class Server{
     }
 
     routes(){
-        this.app.use("/usuarios", userRouter);
+        this.app.use("/usuario", userRouter);
         this.app.use("/login",loginRouter);
         this.app.use("/solicitante", solicitanteRouter);
         this.app.use("/visita", visitaRouter);
+        this.app.use("/beca", becaRouter);
     }
 
     listen(){
