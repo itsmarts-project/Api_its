@@ -15,7 +15,7 @@ loginRouter.post("/",[
     validarCampos
 ], login);
 
-loginRouter.post("/correoReestablecer",[
+loginRouter.post("/correoRestablecer",[
     body('correo').notEmpty(),
     validarCampos
 ], cambiarContrasenia);
