@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFotoDomicilio = exports.confirmarVisita = exports.agregarEstatusVisita = exports.getVisitasPendientes = void 0;
+exports.getFotoSolicitante = exports.confirmarVisita = exports.agregarEstatusVisita = exports.getVisitasPendientes = void 0;
 const path = __importStar(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const visita_1 = __importDefault(require("../modelo/visita"));
@@ -43,7 +43,7 @@ const getVisitasPendientes = async (req, res) => {
                 msg: "El usuario no existe"
             });
         }
-        const visitas = await visita_1.default.findAll({ where: { usuario_idUsuario: usuario.idUsuario } });
+        const visitas = await visita_1.default.findAll({ where: { usuario_idUsuario: usuario.idUsuario, confirmacionSolicitante: false } });
         const solicitantes = [];
         const domicilios = [];
         for (let e of visitas) {
@@ -138,7 +138,7 @@ const confirmarVisita = async (req, res) => {
     }
 };
 exports.confirmarVisita = confirmarVisita;
-const getFotoDomicilio = async (req, res) => {
+const getFotoSolicitante = async (req, res) => {
     const { id } = req.body;
     try {
         const solicitante = await solicitante_1.default.findByPk(id);
@@ -148,14 +148,18 @@ const getFotoDomicilio = async (req, res) => {
             });
         }
         ;
-        const visita = await visita_1.default.findOne({ where: { solicitante_idSolicitante: solicitante?.idSolicitante } });
-        if (!visita) {
+        /*
+        const visita = await Visita.findOne({where: {solicitante_idSolicitante: solicitante?.idSolicitante}});
+
+        if(!visita){
             return res.status(500).send({
                 msg: "Hubo un error"
             });
         }
-        if (visita.fotoDomicilio) {
-            const imagePath = path.join(__dirname, '../uploads', 'casas', visita.fotoDomicilio);
+        
+        */
+        if (solicitante.fotoSolicitante) {
+            const imagePath = path.join(__dirname, '../uploads', 'solicitantes', solicitante.fotoSolicitante);
             console.log(imagePath);
             if (fs_1.default.existsSync(imagePath)) {
                 return res.sendFile(imagePath);
@@ -174,5 +178,5 @@ const getFotoDomicilio = async (req, res) => {
         });
     }
 };
-exports.getFotoDomicilio = getFotoDomicilio;
+exports.getFotoSolicitante = getFotoSolicitante;
 //# sourceMappingURL=visitasController.js.map

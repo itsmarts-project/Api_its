@@ -26,7 +26,7 @@ export const getVisitasPendientes = async(req: Request, res: Response) => {
             })
         }
 
-        const visitas = await Visita.findAll({where: {usuario_idUsuario: usuario.idUsuario}});
+        const visitas = await Visita.findAll({where: {usuario_idUsuario: usuario.idUsuario, confirmacionSolicitante: false}});
         
 
         const solicitantes: any[] = [];
@@ -157,7 +157,7 @@ export const confirmarVisita = async(req: Request, res: Response) => {
 
 };
 
-export const getFotoDomicilio = async(req: Request, res: Response) => {
+export const getFotoSolicitante = async(req: Request, res: Response) => {
 
     const {id} = req.body;
 
@@ -169,6 +169,7 @@ export const getFotoDomicilio = async(req: Request, res: Response) => {
             });
         };
 
+        /*
         const visita = await Visita.findOne({where: {solicitante_idSolicitante: solicitante?.idSolicitante}});
 
         if(!visita){
@@ -177,8 +178,10 @@ export const getFotoDomicilio = async(req: Request, res: Response) => {
             });
         }
         
-        if(visita.fotoDomicilio){
-            const imagePath = path.join(__dirname, '../uploads' ,'casas',visita.fotoDomicilio);
+        */
+
+        if(solicitante.fotoSolicitante){
+            const imagePath = path.join(__dirname, '../uploads' ,'solicitantes',solicitante.fotoSolicitante);
             console.log(imagePath);
             if(fs.existsSync(imagePath)){
                return res.sendFile(imagePath);

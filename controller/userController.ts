@@ -71,7 +71,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
 }
 
 export const editarUsuario = async (req: Request, res: Response) => {
-    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia } = req.body;
+    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia, estatus } = req.body;
 
     try {
         // Buscar el usuario por su idUsuario
@@ -87,6 +87,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
         usuario.segundoApellido = segundoApellido || usuario.segundoApellido;
         usuario.puesto = puesto || usuario.puesto;
         usuario.sueldo = sueldo || usuario.sueldo;
+        usuario.estatus = estatus || usuario.estatus;
 
         // Si se proporciona una nueva contraseña, hash it
         if (contrasenia) {
