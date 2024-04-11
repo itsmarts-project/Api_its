@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
 import Usuario, { UsuarioInstance } from "../modelo/usuario";
+import { UploadedFile } from "express-fileupload";
+import { subirArchivo } from "../helpers/subirFoto";
 
 export const getUsuario = async(req: Request, res: Response) => {
 

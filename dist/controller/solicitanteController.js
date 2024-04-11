@@ -8,6 +8,7 @@ const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
+const subirFoto_1 = require("../helpers/subirFoto");
 const getUsuariosPorVisitar = async (req, res) => {
     try {
         const solicitante = await solicitante_1.default.findAll();
@@ -23,11 +24,19 @@ const getUsuariosPorVisitar = async (req, res) => {
 };
 exports.getUsuariosPorVisitar = getUsuariosPorVisitar;
 const guardarSolicitante = async (req, res) => {
-    //Se accede a los valores del request
-    const { solicitante, domicilio, formulario } = req.body;
     try {
+        //Se accede a los valores del request
+        const datos = req.body.data;
+        const fotoSolicitante = req.files?.fotoSolicitante;
+        const datosJson = JSON.parse(datos);
+        const { solicitante, domicilio, formulario } = datosJson;
+        if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
+            return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+        }
         //Se inicia una transaccion
         const resultados = await configdb_1.default.transaction(async (t) => {
+            const foto = await (0, subirFoto_1.subirArchivo)(fotoSolicitante, ['img', 'jpg', 'png'], 'solicitantes');
+            solicitante.fotoSolicitante = foto;
             //Se guarda en base de datos el solicitante
             const createSolicitante = await solicitante_1.default.create(solicitante, { transaction: t });
             //Se guarda en base de datos el domicilio con la llave foranea de solicitante

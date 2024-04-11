@@ -69,7 +69,7 @@ const getVisitasPendientes = async (req, res) => {
 };
 exports.getVisitasPendientes = getVisitasPendientes;
 const agregarEstatusVisita = async (req, res) => {
-    const { id, estatus, razon } = req.body;
+    const { id, estatus, razon, latitud, longitud } = req.body;
     const fotoCasa = req.files?.fotoCasa;
     console.log(fotoCasa);
     try {
@@ -94,7 +94,7 @@ const agregarEstatusVisita = async (req, res) => {
                 msg: "Registro no encontrado"
             });
         }
-        const establecerEstatus = await visita.update({ fotoDomicilio: foto, estatus: estatus, razon: razon });
+        const establecerEstatus = await visita.update({ fotoDomicilio: foto, estatus: estatus, razon: razon, latitudVisita: latitud, longitudVisita: longitud });
         return res.send({
             establecerEstatus
         });
