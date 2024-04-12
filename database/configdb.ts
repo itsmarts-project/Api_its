@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize";
+import dotenv from 'dotenv';
+dotenv.config();
 
-const databaseConnection = new Sequelize('itsmarts', 'doadmin', 'AVNS_rO7Wlu0CGBP_AKJ7-yk', {
-    host:'itsmarts-do-user-16290119-0.c.db.ondigitalocean.com',
+const databaseConnection = new Sequelize('itsmarts', 'doadmin', process.env.PASSWORD_DB, {
+    host: process.env.HOST_DB,
     dialect: 'postgres',
     port: 25060,
     protocol: 'null',
@@ -12,5 +14,4 @@ const databaseConnection = new Sequelize('itsmarts', 'doadmin', 'AVNS_rO7Wlu0CGB
         }
     }
 });
-
 export default databaseConnection;

@@ -1,8 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const databaseConnection = new sequelize_1.Sequelize('itsmarts', 'doadmin', 'AVNS_rO7Wlu0CGBP_AKJ7-yk', {
-    host: 'itsmarts-do-user-16290119-0.c.db.ondigitalocean.com',
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const databaseConnection = new sequelize_1.Sequelize('itsmarts', 'doadmin', process.env.PASSWORD_DB, {
+    host: process.env.HOST_DB,
     dialect: 'postgres',
     port: 25060,
     protocol: 'null',
