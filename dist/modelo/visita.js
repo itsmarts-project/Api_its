@@ -49,6 +49,10 @@ const Visita = configdb_1.default.define("visita", {
         type: sequelize_1.DataTypes.STRING,
         defaultValue: "Sin capturar"
     },
+    fechaVisita: {
+        type: sequelize_1.DataTypes.DATE,
+        defaultValue: new Date()
+    },
     solicitante_idSolicitante: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,

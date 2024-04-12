@@ -4,15 +4,53 @@ import Solicitante from "../modelo/solicitante";
 import Domicilio from "../modelo/domicilio";
 import Formulario from "../modelo/formulario";
 import databaseConnection from "../database/configdb";
+import { UploadedFile } from "express-fileupload";
+import { subirArchivo } from "../helpers/subirFoto";
+
+
+export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
+
+
+    try{
+
+        const solicitante = await Solicitante.findAll();
+        return res.send({
+            solicitante
+        })
+
+    }catch(e){
+
+        return res.status(500).send({
+            msg : "Hubo un error"
+        });
+    }
+
+}
+
+
 
 export const guardarSolicitante = async(req: Request, res: Response) => {
 
-    //Se accede a los valores del request
-    const {solicitante, domicilio, formulario} = req.body;
-
+   
     try{
+            //Se accede a los valores del request
+            const datos = req.body.data;
+            const fotoSolicitante: UploadedFile | UploadedFile[] | undefined = req.files?.fotoSolicitante;
+            const datosJson = JSON.parse(datos);
+            const {solicitante, domicilio, formulario} = datosJson;
+            if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
+                return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+            }
+
+         
         //Se inicia una transaccion
         const resultados = await databaseConnection.transaction(async(t) => {
+
+          
+
+            const foto:any = await subirArchivo(fotoSolicitante, ['img','jpg','png'], 'solicitantes');
+
+            solicitante.fotoSolicitante = foto;
 
             //Se guarda en base de datos el solicitante
             const createSolicitante = await Solicitante.create(solicitante, {transaction: t});
@@ -95,30 +133,6 @@ export const editarSolicitante = async(req: Request, res: Response) => {
         return res.send({
             resultado
         });
-
-    }catch(e){
-        return res.status(500).send({
-            msg: "Hubo un error"
-        })
-    }
-
-
-}
-
-export const cargarVisita = async(req: Request, res: Response) => {
-
-    const {id, estatus} = req.body;
-
-    try{
-
-        const solicitante = await Solicitante.findByPk(id);
-        if(!solicitante){
-            return res.status(401).send({
-                msg: "No existe"
-            });
-        }
-        await solicitante.update(estatus);
-        
 
     }catch(e){
         return res.status(500).send({

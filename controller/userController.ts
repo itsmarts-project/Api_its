@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
 import Usuario, { UsuarioInstance } from "../modelo/usuario";
+import { UploadedFile } from "express-fileupload";
+import { subirArchivo } from "../helpers/subirFoto";
 
 export const getUsuario = async(req: Request, res: Response) => {
 
@@ -17,6 +19,30 @@ export const getUsuario = async(req: Request, res: Response) => {
         })
     }
 
+}
+
+
+export const getRolUsuario = async(req: Request, res: Response) => {
+    const {correo} = req.body;
+
+    try{
+
+        const usuario = await Usuario.findOne({where: {correo}});
+
+        if(!usuario){
+            return res.status(404).send({
+                msg: "El usuario no existe"
+            })
+        }
+
+        return res.send({
+            usuario
+        });
+    }catch(e){
+        return res.status(500).send({
+            msg: "Hubo un error"
+        });
+    }
 }
 
 export const registrarUsuario = async(req: Request, res: Response) => {
@@ -45,7 +71,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
 }
 
 export const editarUsuario = async (req: Request, res: Response) => {
-    const { idUsuario, nombre, primerApellido, segundoApellido, puesto, fechaContratacion, sueldo, correo, contrasenia } = req.body;
+    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia, estatus } = req.body;
 
     try {
         // Buscar el usuario por su idUsuario
@@ -60,9 +86,8 @@ export const editarUsuario = async (req: Request, res: Response) => {
         usuario.primerApellido = primerApellido || usuario.primerApellido;
         usuario.segundoApellido = segundoApellido || usuario.segundoApellido;
         usuario.puesto = puesto || usuario.puesto;
-        usuario.fechaContratacion = fechaContratacion || usuario.fechaContratacion;
         usuario.sueldo = sueldo || usuario.sueldo;
-        usuario.correo = correo || usuario.correo;
+        usuario.estatus = estatus || usuario.estatus;
 
         // Si se proporciona una nueva contraseña, hash it
         if (contrasenia) {
@@ -116,6 +141,29 @@ export const borrarUsuario = async (req: Request, res: Response) => {
   
       // Cambiar el estatus del usuario a "BA" (baja)
       usuario.estatus = "BL";
+  
+      // Guardar los cambios en la base de datos
+      await usuario.save();
+  
+      res.send({ usuario });
+    } catch (e) {
+      return res.status(500).send({ e });
+    }
+  };
+
+  export const desbloquearUsuario = async (req: Request, res: Response) => {
+    const { idUsuario } = req.body;
+  
+    try {
+      // Buscar el usuario por su idUsuario
+      const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
+  
+      if (!usuario) {
+        return res.status(404).send({ msg: "Usuario no encontrado" });
+      }
+  
+      // Cambiar el estatus del usuario a "BA" (baja)
+      usuario.estatus = "AC";
   
       // Guardar los cambios en la base de datos
       await usuario.save();

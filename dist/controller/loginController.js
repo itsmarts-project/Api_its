@@ -1,25 +1,17 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
+exports.solicitarDesbloqueo = exports.cambiarContrasenia = exports.login = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const usuario_1 = __importDefault(require("../modelo/usuario"));
 const generarToken_1 = require("../helpers/generarToken");
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const mailgun = require("mailgun.js");
+const login = async (req, res) => {
     const { correo, contrasenia } = req.body;
     try {
-        const usuario = yield usuario_1.default.findOne({ where: { correo } });
+        const usuario = await usuario_1.default.findOne({ where: { correo } });
         if (!usuario || usuario.estatus === "BA") {
             return res.status(401).send({
                 msg: "El usuario no existe"
@@ -36,7 +28,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 msg: "Contraseña incorrecta"
             });
         }
-        const token = yield (0, generarToken_1.generateToken)(usuario.idUsuario);
+        const token = await (0, generarToken_1.generateToken)(usuario.idUsuario);
         return res.send({
             token
         });
@@ -46,6 +38,64 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             e
         });
     }
-});
+};
 exports.login = login;
+const cambiarContrasenia = async (req, res) => {
+    const { correo } = req.body;
+    const nombreU = await usuario_1.default.findOne({ where: { correo: correo } });
+    const nombreUsuario = nombreU.nombre;
+    const idU = await usuario_1.default.findOne({ where: { correo: correo } });
+    const idUsuario = idU.idUsuario;
+    const formData = require('form-data');
+    const Mailgun = require('mailgun.js');
+    const mailgun = new Mailgun(formData);
+    const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY });
+    mg.messages.create('sandbox785fbfb9a4f74a1d8e07cc8fdc8febce.mailgun.org', {
+        from: "Soporte <geoapoyosequipoazul@gmail.com>",
+        to: ["ageoapoyos@gmail.com"],
+        subject: `Solicitud para restablecer contraseña - Usuario: ${nombreUsuario}`,
+        text: `Mensaje Autogenerado`,
+        html: `<h2>Buen dia.<br> Este es un correo autogenerado para notificar que el usuario ${nombreUsuario} con ID "${idUsuario}" y con correo "${correo}" ha solicitado un cambio de contraseña, el cambio queda a su discreción. Al finalizar favor de contactarse con el empleado para ser notificado.<br>PD: Favor de no responder a este correo.</h2>`
+    })
+        .then((msg) => {
+        return res.send({
+            msg: "Correo enviado"
+        });
+    })
+        .catch((err) => {
+        return res.status(500).send({
+            msg: "Error al enviar correo"
+        });
+    });
+};
+exports.cambiarContrasenia = cambiarContrasenia;
+const solicitarDesbloqueo = async (req, res) => {
+    const { correo } = req.body;
+    const nombreU = await usuario_1.default.findOne({ where: { correo: correo } });
+    const nombreUsuario = nombreU.nombre;
+    const idU = await usuario_1.default.findOne({ where: { correo: correo } });
+    const idUsuario = idU.idUsuario;
+    const formData = require('form-data');
+    const Mailgun = require('mailgun.js');
+    const mailgun = new Mailgun(formData);
+    const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY });
+    mg.messages.create('sandbox785fbfb9a4f74a1d8e07cc8fdc8febce.mailgun.org', {
+        from: "Soporte <geoapoyosequipoazul@gmail.com>",
+        to: ["ageoapoyos@gmail.com"],
+        subject: `Solicitud para desbloquear cuenta - Usuario: ${nombreUsuario}`,
+        text: `Mensaje Autogenerado`,
+        html: `<h2>Buen dia.<br> Este es un correo autogenerado para notificar que el usuario ${nombreUsuario} con ID "${idUsuario}" y con correo "${correo}" ha solicitado el desbloqueo de su cuenta, el cambio queda a su discreción. Al finalizar favor de contactarse con el empleado para ser notificado.<br>PD: Favor de no responder a este correo.</h2>`
+    })
+        .then((msg) => {
+        return res.send({
+            msg: "Correo enviado"
+        });
+    })
+        .catch((err) => {
+        return res.status(500).send({
+            msg: "Error al enviar correo"
+        });
+    });
+};
+exports.solicitarDesbloqueo = solicitarDesbloqueo;
 //# sourceMappingURL=loginController.js.map

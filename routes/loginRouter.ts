@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { login } from "../controller/loginController";
+import { login, cambiarContrasenia, solicitarDesbloqueo } from "../controller/loginController";
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
+import validarJWT from "../middlewares/validarToken";
+import validarRol from "../middlewares/validarRol";
 
 
 const loginRouter = Router();
@@ -14,6 +16,16 @@ loginRouter.post("/",[
     body('contrasenia').notEmpty(),
     validarCampos
 ], login);
+
+loginRouter.post("/correoRestablecer",[
+    body('correo').notEmpty(),
+    validarCampos
+], cambiarContrasenia);
+
+loginRouter.post("/correoDesbloquear",[
+    body('correo').notEmpty(),
+    validarCampos
+], solicitarDesbloqueo);
 
 export default loginRouter;
 

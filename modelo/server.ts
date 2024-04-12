@@ -1,10 +1,12 @@
 import express, {Application} from 'express';
 import cors from 'cors';
+import fileUpload from "express-fileupload";
 import databaseConnection  from '../database/configdb';
 import userRouter from '../routes/userRoutes';
 import loginRouter from '../routes/loginRouter';
 import solicitanteRouter from '../routes/solicitanteRouter';
 import visitaRouter from '../routes/visitaRouter';
+import becaRouter from '../routes/becaRouter';
 
 export class Server{
     private app: Application;
@@ -22,6 +24,11 @@ export class Server{
     middlewares(){
         this.app.use(cors());
         this.app.use(express.json());
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }))
 
     }
 
@@ -35,10 +42,11 @@ export class Server{
     }
 
     routes(){
-        this.app.use("/usuarios", userRouter);
+        this.app.use("/usuario", userRouter);
         this.app.use("/login",loginRouter);
         this.app.use("/solicitante", solicitanteRouter);
         this.app.use("/visita", visitaRouter);
+        this.app.use("/beca", becaRouter);
     }
 
     listen(){

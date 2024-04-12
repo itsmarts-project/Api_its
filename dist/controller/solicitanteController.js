@@ -1,41 +1,61 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cargarVisita = exports.editarSolicitante = exports.guardarSolicitante = void 0;
+exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
-const guardarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //Se accede a los valores del request
-    const { solicitante, domicilio, formulario } = req.body;
+const subirFoto_1 = require("../helpers/subirFoto");
+const getUsuariosPorVisitar = async (req, res) => {
     try {
+        const solicitante = await solicitante_1.default.findAll();
+        return res.send({
+            solicitante
+        });
+    }
+    catch (e) {
+        return res.status(500).send({
+            msg: "Hubo un error"
+        });
+    }
+};
+exports.getUsuariosPorVisitar = getUsuariosPorVisitar;
+const guardarSolicitante = async (req, res) => {
+    try {
+        //Se accede a los valores del request
+        const datos = req.body.data;
+        const fotoSolicitante = req.files?.fotoSolicitante;
+        const datosJson = JSON.parse(datos);
+        const { solicitante, domicilio, formulario } = datosJson;
+        if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
+            return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+        }
         //Se inicia una transaccion
-        const resultados = yield configdb_1.default.transaction((t) => __awaiter(void 0, void 0, void 0, function* () {
+        const resultados = await configdb_1.default.transaction(async (t) => {
+            const foto = await (0, subirFoto_1.subirArchivo)(fotoSolicitante, ['img', 'jpg', 'png'], 'solicitantes');
+            solicitante.fotoSolicitante = foto;
             //Se guarda en base de datos el solicitante
-            const createSolicitante = yield solicitante_1.default.create(solicitante, { transaction: t });
+            const createSolicitante = await solicitante_1.default.create(solicitante, { transaction: t });
             //Se guarda en base de datos el domicilio con la llave foranea de solicitante
-            const createDomicilio = yield domicilio_1.default.create(Object.assign(Object.assign({}, domicilio), { solicitante_idSolicitante: createSolicitante.idSolicitante }), { transaction: t });
+            const createDomicilio = await domicilio_1.default.create({
+                ...domicilio,
+                solicitante_idSolicitante: createSolicitante.idSolicitante
+            }, { transaction: t });
             //Se guarda en base de datos el formulario con la llave foranea del solicitante
-            const createFormulario = yield formulario_1.default.create(Object.assign(Object.assign({}, formulario), { solicitante_idSolicitante: createSolicitante.idSolicitante }), { transaction: t });
+            const createFormulario = await formulario_1.default.create({
+                ...formulario,
+                solicitante_idSolicitante: createSolicitante.idSolicitante
+            }, { transaction: t });
             //Se retornan los valores
             return {
                 createSolicitante,
                 createDomicilio,
                 createFormulario
             };
-        }));
+        });
         res.send({
             resultados
         });
@@ -45,17 +65,17 @@ const guardarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, funct
             msg: e
         });
     }
-});
+};
 exports.guardarSolicitante = guardarSolicitante;
-const editarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const editarSolicitante = async (req, res) => {
     //Accede a los elementos de la peticion
     const { id, reqSolicitante, reqDomicilio } = req.body;
     try {
         //Se inicia transaccion
-        const resultado = configdb_1.default.transaction((t) => __awaiter(void 0, void 0, void 0, function* () {
+        const resultado = configdb_1.default.transaction(async (t) => {
             try {
                 //Se busca al solicitante por el id
-                const solicitante = yield solicitante_1.default.findByPk(id, { transaction: t });
+                const solicitante = await solicitante_1.default.findByPk(id, { transaction: t });
                 //Si el solicitante no existe devuelve un error
                 if (!solicitante) {
                     return res.status(401).send({
@@ -63,7 +83,7 @@ const editarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, functi
                     });
                 }
                 //Busca el domicilio por la llave foranea del solicitante
-                const domicilio = yield domicilio_1.default.findByPk(solicitante.idSolicitante, { transaction: t });
+                const domicilio = await domicilio_1.default.findByPk(solicitante.idSolicitante, { transaction: t });
                 //Si el solicitante no existe retorna un error
                 if (!domicilio) {
                     return res.status(500).send({
@@ -71,9 +91,9 @@ const editarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, functi
                     });
                 }
                 //Actualiza el solicitante
-                yield solicitante.update(reqSolicitante);
+                await solicitante.update(reqSolicitante);
                 //Actualiza el domicilio
-                yield domicilio.update(reqDomicilio);
+                await domicilio.update(reqDomicilio);
                 return { solicitante, domicilio };
             }
             catch (e) {
@@ -81,7 +101,7 @@ const editarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, functi
                     msg: e
                 });
             }
-        }));
+        });
         return res.send({
             resultado
         });
@@ -91,24 +111,6 @@ const editarSolicitante = (req, res) => __awaiter(void 0, void 0, void 0, functi
             msg: "Hubo un error"
         });
     }
-});
+};
 exports.editarSolicitante = editarSolicitante;
-const cargarVisita = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, estatus } = req.body;
-    try {
-        const solicitante = yield solicitante_1.default.findByPk(id);
-        if (!solicitante) {
-            return res.status(401).send({
-                msg: "No existe"
-            });
-        }
-        yield solicitante.update(estatus);
-    }
-    catch (e) {
-        return res.status(500).send({
-            msg: "Hubo un error"
-        });
-    }
-});
-exports.cargarVisita = cargarVisita;
 //# sourceMappingURL=solicitanteController.js.map

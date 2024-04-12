@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { bloquearUsuario, borrarUsuario, editarUsuario, getUsuario, registrarUsuario } from "../controller/userController";
+import { desbloquearUsuario, bloquearUsuario, borrarUsuario, editarUsuario, getRolUsuario, getUsuario, registrarUsuario } from "../controller/userController";
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
 import validarJWT from "../middlewares/validarToken";
@@ -7,6 +7,10 @@ import validarRol from "../middlewares/validarRol";
 import {validarCorreoUsuario} from "../middlewares/validarEmail";
 
 const userRouter = Router();
+
+//METODO GET QUE RECIBE UN CORREO ELECTRONICO Y DEVUELVE EL ROL
+userRouter.post("/traerRolUsuario",[
+] ,getRolUsuario);
 
 
 /*METODO GET, RECIBE UN TOKEN VALIDO (PATH POST /login/) Y SOLO SE 
@@ -22,7 +26,6 @@ userRouter.get("/", [
 "puesto" (ASIGNAN COMO "AD" COMO ADMINISTRADOR, "VI" COMO VISITANTE Y "CA" COMO CAPTURADOR),
 "fechaContratacion", "sueldo", "correo", "contrasenia"*/
 userRouter.post("/registrarUsuario", [
-
     body('nombre').notEmpty(),
     body('primerApellido').notEmpty(),
     body('segundoApellido').notEmpty(),
@@ -40,6 +43,7 @@ LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
 userRouter.post("/editarUsuario",[
     validarJWT,
     validarRol(["AD"]),
+    validarCorreoUsuario,
     body('idUsuario').notEmpty(),
     validarCampos
 ], editarUsuario);
@@ -56,11 +60,16 @@ userRouter.post("/borrarUsuario",[
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/bloquearUsuario",[
-    validarJWT,
-    validarRol(['AD']),
     body('idUsuario').notEmpty(),
     validarCampos
 ],bloquearUsuario);
+
+//METODO POST, RECIBE UNICAMENTE ID DE USUARIO
+userRouter.post("/desbloquearUsuario", [
+    validarJWT,
+    validarRol(["AD"]),
+    validarCampos
+],desbloquearUsuario);
 
 
 export default userRouter;

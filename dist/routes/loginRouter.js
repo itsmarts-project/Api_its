@@ -15,5 +15,13 @@ loginRouter.post("/", [
     (0, express_validator_1.body)('contrasenia').notEmpty(),
     ValidarErrores_1.default
 ], loginController_1.login);
+loginRouter.post("/correoRestablecer", [
+    (0, express_validator_1.body)('correo').notEmpty(),
+    ValidarErrores_1.default
+], loginController_1.cambiarContrasenia);
+loginRouter.post("/correoDesbloquear", [
+    (0, express_validator_1.body)('correo').notEmpty(),
+    ValidarErrores_1.default
+], loginController_1.solicitarDesbloqueo);
 exports.default = loginRouter;
 //# sourceMappingURL=loginRouter.js.map
