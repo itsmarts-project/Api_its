@@ -56,6 +56,10 @@ userRouter.post("/bloquearUsuario", [
     ValidarErrores_1.default
 ], userController_1.bloquearUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/desbloquearUsuario", userController_1.desbloquearUsuario);
+userRouter.post("/desbloquearUsuario", [
+    validarToken_1.default,
+    (0, validarRol_1.default)(["AD"]),
+    ValidarErrores_1.default
+], userController_1.desbloquearUsuario);
 exports.default = userRouter;
 //# sourceMappingURL=userRoutes.js.map

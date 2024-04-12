@@ -59,9 +59,9 @@ export const cambiarContrasenia = async (req: Request, res: Response) => {
   const formData = require('form-data');
   const Mailgun = require('mailgun.js');
   const mailgun = new Mailgun(formData);
-  const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY || 'df812e8161468d1b37c8f58b7c686b29-4b670513-70c0b60e' });
+  const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY});
 
-  mg.messages.create('sandboxe71fa513f7484a849cf7f84c6d83a9b4.mailgun.org', {
+  mg.messages.create('sandbox785fbfb9a4f74a1d8e07cc8fdc8febce.mailgun.org', {
     from: "Soporte <geoapoyosequipoazul@gmail.com>",
     to: ["ageoapoyos@gmail.com"],
     subject: `Solicitud para restablecer contraseña - Usuario: ${nombreUsuario}`,
@@ -92,9 +92,9 @@ export const solicitarDesbloqueo = async (req: Request, res: Response) => {
   const formData = require('form-data');
   const Mailgun = require('mailgun.js');
   const mailgun = new Mailgun(formData);
-  const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY || 'df812e8161468d1b37c8f58b7c686b29-4b670513-70c0b60e' });
+  const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY});
 
-  mg.messages.create('sandboxe71fa513f7484a849cf7f84c6d83a9b4.mailgun.org', {
+  mg.messages.create('sandbox785fbfb9a4f74a1d8e07cc8fdc8febce.mailgun.org', {
     from: "Soporte <geoapoyosequipoazul@gmail.com>",
     to: ["ageoapoyos@gmail.com"],
     subject: `Solicitud para desbloquear cuenta - Usuario: ${nombreUsuario}`,

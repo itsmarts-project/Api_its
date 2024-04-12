@@ -7,8 +7,6 @@ const express_1 = require("express");
 const loginController_1 = require("../controller/loginController");
 const express_validator_1 = require("express-validator");
 const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"));
-const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
-const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
 const loginRouter = (0, express_1.Router)();
 /*METODO POST, RECIBE COMO PARAMETRO UN "correo" Y "contrasenia" VALIDOS,
 SOLO ADMITIDE A USUARIOS CON EL ESTATUS "AC" (ACTIVO), "BL" Y "BA" SE RECHAZARAN*/
@@ -18,14 +16,10 @@ loginRouter.post("/", [
     ValidarErrores_1.default
 ], loginController_1.login);
 loginRouter.post("/correoRestablecer", [
-    validarToken_1.default,
-    (0, validarRol_1.default)(["AD"]),
     (0, express_validator_1.body)('correo').notEmpty(),
     ValidarErrores_1.default
 ], loginController_1.cambiarContrasenia);
 loginRouter.post("/correoDesbloquear", [
-    validarToken_1.default,
-    (0, validarRol_1.default)(["AD"]),
     (0, express_validator_1.body)('correo').notEmpty(),
     ValidarErrores_1.default
 ], loginController_1.solicitarDesbloqueo);

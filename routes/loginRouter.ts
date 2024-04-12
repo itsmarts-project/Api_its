@@ -18,15 +18,11 @@ loginRouter.post("/",[
 ], login);
 
 loginRouter.post("/correoRestablecer",[
-    validarJWT,
-    validarRol(["AD"]),
     body('correo').notEmpty(),
     validarCampos
 ], cambiarContrasenia);
 
 loginRouter.post("/correoDesbloquear",[
-    validarJWT,
-    validarRol(["AD"]),
     body('correo').notEmpty(),
     validarCampos
 ], solicitarDesbloqueo);

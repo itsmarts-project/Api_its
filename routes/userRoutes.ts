@@ -65,7 +65,11 @@ userRouter.post("/bloquearUsuario",[
 ],bloquearUsuario);
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/desbloquearUsuario", desbloquearUsuario);
+userRouter.post("/desbloquearUsuario", [
+    validarJWT,
+    validarRol(["AD"]),
+    validarCampos
+],desbloquearUsuario);
 
 
 export default userRouter;
