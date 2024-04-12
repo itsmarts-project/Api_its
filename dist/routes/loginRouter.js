@@ -15,7 +15,7 @@ loginRouter.post("/", [
     (0, express_validator_1.body)('contrasenia').notEmpty(),
     ValidarErrores_1.default
 ], loginController_1.login);
-loginRouter.post("/correoReestablecer", [
+loginRouter.post("/correoRestablecer", [
     (0, express_validator_1.body)('correo').notEmpty(),
     ValidarErrores_1.default
 ], loginController_1.cambiarContrasenia);
