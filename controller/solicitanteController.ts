@@ -4,6 +4,8 @@ import Solicitante from "../modelo/solicitante";
 import Domicilio from "../modelo/domicilio";
 import Formulario from "../modelo/formulario";
 import databaseConnection from "../database/configdb";
+import { UploadedFile } from "express-fileupload";
+import { subirArchivo } from "../helpers/subirFoto";
 
 
 export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
@@ -29,12 +31,26 @@ export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
 
 export const guardarSolicitante = async(req: Request, res: Response) => {
 
-    //Se accede a los valores del request
-    const {solicitante, domicilio, formulario} = req.body;
-
+   
     try{
+            //Se accede a los valores del request
+            const datos = req.body.data;
+            const fotoSolicitante: UploadedFile | UploadedFile[] | undefined = req.files?.fotoSolicitante;
+            const datosJson = JSON.parse(datos);
+            const {solicitante, domicilio, formulario} = datosJson;
+            if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
+                return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+            }
+
+         
         //Se inicia una transaccion
         const resultados = await databaseConnection.transaction(async(t) => {
+
+          
+
+            const foto:any = await subirArchivo(fotoSolicitante, ['img','jpg','png'], 'solicitantes');
+
+            solicitante.fotoSolicitante = foto;
 
             //Se guarda en base de datos el solicitante
             const createSolicitante = await Solicitante.create(solicitante, {transaction: t});

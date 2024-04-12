@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
 import Usuario, { UsuarioInstance } from "../modelo/usuario";
+import { UploadedFile } from "express-fileupload";
+import { subirArchivo } from "../helpers/subirFoto";
 
 export const getUsuario = async(req: Request, res: Response) => {
 
@@ -34,11 +36,11 @@ export const getRolUsuario = async(req: Request, res: Response) => {
         }
 
         return res.send({
-            rol: usuario.puesto
+            usuario
         });
     }catch(e){
         return res.status(500).send({
-            msg: "Chinga tu madre alexis"
+            msg: "Hubo un error"
         });
     }
 }
@@ -69,7 +71,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
 }
 
 export const editarUsuario = async (req: Request, res: Response) => {
-    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia } = req.body;
+    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia, estatus } = req.body;
 
     try {
         // Buscar el usuario por su idUsuario
@@ -85,6 +87,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
         usuario.segundoApellido = segundoApellido || usuario.segundoApellido;
         usuario.puesto = puesto || usuario.puesto;
         usuario.sueldo = sueldo || usuario.sueldo;
+        usuario.estatus = estatus || usuario.estatus;
 
         // Si se proporciona una nueva contraseña, hash it
         if (contrasenia) {

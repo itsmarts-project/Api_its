@@ -15,6 +15,7 @@ export interface SolicitanteAttributes {
   estatus: string;
   montoSolicitado: number;
   universidad: string;
+  fotoSolicitante: string;
 
 }
 
@@ -68,6 +69,9 @@ const Solicitante = databaseConnection.define<SolicitanteInstance>("solicitante"
     defaultValue: "AC"
   },
   universidad: {
+    type: DataTypes.STRING
+  },
+  fotoSolicitante: {
     type: DataTypes.STRING
   }
 }, { timestamps: false, tableName: "solicitante", schema: "geoapoyos" });

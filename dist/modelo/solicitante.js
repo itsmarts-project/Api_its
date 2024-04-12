@@ -54,6 +54,9 @@ const Solicitante = configdb_1.default.define("solicitante", {
     },
     universidad: {
         type: sequelize_1.DataTypes.STRING
+    },
+    fotoSolicitante: {
+        type: sequelize_1.DataTypes.STRING
     }
 }, { timestamps: false, tableName: "solicitante", schema: "geoapoyos" });
 exports.default = Solicitante;
