@@ -2,6 +2,8 @@ import { Router } from "express";
 import { login, cambiarContrasenia, solicitarDesbloqueo } from "../controller/loginController";
 import { body } from "express-validator";
 import validarCampos from "../middlewares/ValidarErrores";
+import validarJWT from "../middlewares/validarToken";
+import validarRol from "../middlewares/validarRol";
 
 
 const loginRouter = Router();
@@ -16,11 +18,15 @@ loginRouter.post("/",[
 ], login);
 
 loginRouter.post("/correoRestablecer",[
+    validarJWT,
+    validarRol(["AD"]),
     body('correo').notEmpty(),
     validarCampos
 ], cambiarContrasenia);
 
 loginRouter.post("/correoDesbloquear",[
+    validarJWT,
+    validarRol(["AD"]),
     body('correo').notEmpty(),
     validarCampos
 ], solicitarDesbloqueo);

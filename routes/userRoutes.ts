@@ -43,6 +43,7 @@ LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
 userRouter.post("/editarUsuario",[
     validarJWT,
     validarRol(["AD"]),
+    validarCorreoUsuario,
     body('idUsuario').notEmpty(),
     validarCampos
 ], editarUsuario);
@@ -59,8 +60,6 @@ userRouter.post("/borrarUsuario",[
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
 userRouter.post("/bloquearUsuario",[
-    validarJWT,
-    validarRol(['AD']),
     body('idUsuario').notEmpty(),
     validarCampos
 ],bloquearUsuario);
