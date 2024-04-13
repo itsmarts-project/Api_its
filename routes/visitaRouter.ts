@@ -5,9 +5,9 @@ import validarJWT from "../middlewares/validarToken";
 
 const visitaRouter = Router();
 
-visitaRouter.get("/visitasPendientes", getVisitasPendientes);
-visitaRouter.post("/actualizarEstatus", agregarEstatusVisita);
-visitaRouter.post("/confirmarVisita", confirmarVisita);
-visitaRouter.get("/fotoSolicitante", getFotoSolicitante);
+visitaRouter.post("/visitasPendientes", getVisitasPendientes);
+visitaRouter.put("/actualizarEstatus", agregarEstatusVisita);
+visitaRouter.put("/confirmarVisita", confirmarVisita);
+visitaRouter.post("/fotoSolicitante", getFotoSolicitante);
 
 export default visitaRouter;

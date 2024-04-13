@@ -40,7 +40,7 @@ userRouter.post("/registrarUsuario", [
 
 /*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS 
 LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
-userRouter.post("/editarUsuario",[
+userRouter.put("/editarUsuario",[
     validarJWT,
     validarRol(["AD"]),
     validarCorreoUsuario,
@@ -50,7 +50,7 @@ userRouter.post("/editarUsuario",[
 
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/borrarUsuario",[
+userRouter.put("/borrarUsuario",[
     validarJWT,
     validarRol(["AD"]),
     body('idUsuario').notEmpty(),
@@ -59,13 +59,13 @@ userRouter.post("/borrarUsuario",[
 
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/bloquearUsuario",[
+userRouter.put("/bloquearUsuario",[
     body('idUsuario').notEmpty(),
     validarCampos
 ],bloquearUsuario);
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/desbloquearUsuario", [
+userRouter.put("/desbloquearUsuario", [
     validarJWT,
     validarRol(["AD"]),
     validarCampos

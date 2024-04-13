@@ -36,7 +36,7 @@ userRouter.post("/registrarUsuario", [
 ], userController_1.registrarUsuario);
 /*POST (PARAMETRO OBLIGATORIO: idUsuario) PUEDE RECIBIR TODOS
 LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
-userRouter.post("/editarUsuario", [
+userRouter.put("/editarUsuario", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD"]),
     validarEmail_1.validarCorreoUsuario,
@@ -44,19 +44,19 @@ userRouter.post("/editarUsuario", [
     ValidarErrores_1.default
 ], userController_1.editarUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/borrarUsuario", [
+userRouter.put("/borrarUsuario", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD"]),
     (0, express_validator_1.body)('idUsuario').notEmpty(),
     ValidarErrores_1.default
 ], userController_1.borrarUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/bloquearUsuario", [
+userRouter.put("/bloquearUsuario", [
     (0, express_validator_1.body)('idUsuario').notEmpty(),
     ValidarErrores_1.default
 ], userController_1.bloquearUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.post("/desbloquearUsuario", [
+userRouter.put("/desbloquearUsuario", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD"]),
     ValidarErrores_1.default
