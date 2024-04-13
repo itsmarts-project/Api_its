@@ -8,7 +8,6 @@ const solicitanteController_1 = require("../controller/solicitanteController");
 const validarToken_1 = __importDefault(require("../middlewares/validarToken"));
 const validarRol_1 = __importDefault(require("../middlewares/validarRol"));
 const ValidarErrores_1 = __importDefault(require("../middlewares/ValidarErrores"));
-const validarEmail_1 = require("../middlewares/validarEmail");
 const solicitanteRouter = (0, express_1.Router)();
 solicitanteRouter.get("/getSolicitantes", [
     validarToken_1.default,
@@ -18,7 +17,6 @@ solicitanteRouter.get("/getSolicitantes", [
 solicitanteRouter.post("/registrar", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD", "CA"]),
-    validarEmail_1.validarCorreoSolicitante,
     ValidarErrores_1.default
 ], solicitanteController_1.guardarSolicitante);
 solicitanteRouter.put("/editar", [

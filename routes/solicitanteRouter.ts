@@ -15,7 +15,6 @@ solicitanteRouter.get("/getSolicitantes",[
 solicitanteRouter.post("/registrar", [
     validarJWT,
     validarRol(["AD", "CA"]),
-    validarCorreoSolicitante,
     validarCampos
 ],guardarSolicitante);
 solicitanteRouter.put("/editar",[
