@@ -3,6 +3,7 @@ import { editarSolicitante, getUsuariosPorVisitar, guardarSolicitante } from "..
 import validarJWT from "../middlewares/validarToken";
 import validarRol from "../middlewares/validarRol";
 import validarCampos from "../middlewares/ValidarErrores";
+import { validarCorreoSolicitante } from "../middlewares/validarEmail";
 
 const solicitanteRouter = Router();
 
@@ -14,6 +15,7 @@ solicitanteRouter.get("/getSolicitantes",[
 solicitanteRouter.post("/registrar", [
     validarJWT,
     validarRol(["AD", "CA"]),
+    validarCorreoSolicitante,
     validarCampos
 ],guardarSolicitante);
 solicitanteRouter.put("/editar",[
