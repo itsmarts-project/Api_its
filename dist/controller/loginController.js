@@ -43,8 +43,8 @@ exports.login = login;
 const cambiarContrasenia = async (req, res) => {
     const { correo } = req.body;
     const correoValidado = await usuario_1.default.findOne({ where: { correo: correo } });
-    if (!correo) {
-        return res.status(401).send({ correo: correoValidado });
+    if (!correoValidado) {
+        return res.status(200).send({ correo: "mainez prezidente" });
     }
     const nombreU = await usuario_1.default.findOne({ where: { correo: correo } });
     const nombreUsuario = nombreU.nombre;
@@ -76,8 +76,8 @@ exports.cambiarContrasenia = cambiarContrasenia;
 const solicitarDesbloqueo = async (req, res) => {
     const { correo } = req.body;
     const correoValidado = await usuario_1.default.findOne({ where: { correo: correo } });
-    if (!correo) {
-        return res.status(401).send({ correo: correoValidado });
+    if (!correoValidado) {
+        return res.status(200).send({ correo: "Mainez preziendete" });
     }
     const nombreU = await usuario_1.default.findOne({ where: { correo: correo } });
     const nombreUsuario = nombreU.nombre;
