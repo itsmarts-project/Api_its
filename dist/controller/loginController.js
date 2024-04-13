@@ -42,6 +42,10 @@ const login = async (req, res) => {
 exports.login = login;
 const cambiarContrasenia = async (req, res) => {
     const { correo } = req.body;
+    const correoValidado = await usuario_1.default.findOne({ where: { correo: correo } });
+    if (!correo) {
+        return res.status(401).send({ correo: correoValidado });
+    }
     const nombreU = await usuario_1.default.findOne({ where: { correo: correo } });
     const nombreUsuario = nombreU.nombre;
     const idU = await usuario_1.default.findOne({ where: { correo: correo } });
@@ -71,6 +75,10 @@ const cambiarContrasenia = async (req, res) => {
 exports.cambiarContrasenia = cambiarContrasenia;
 const solicitarDesbloqueo = async (req, res) => {
     const { correo } = req.body;
+    const correoValidado = await usuario_1.default.findOne({ where: { correo: correo } });
+    if (!correo) {
+        return res.status(401).send({ correo: correoValidado });
+    }
     const nombreU = await usuario_1.default.findOne({ where: { correo: correo } });
     const nombreUsuario = nombreU.nombre;
     const idU = await usuario_1.default.findOne({ where: { correo: correo } });

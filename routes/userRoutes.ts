@@ -33,7 +33,7 @@ userRouter.post("/registrarUsuario", [
     body('puesto').notEmpty(),
     body('fechaContratacion').notEmpty(),
     body('sueldo').notEmpty(),
-    body('correo').notEmpty(),
+    body('correo').notEmpty().isEmail(),
     body('contrasenia').notEmpty(),
     validarCampos
 ], registrarUsuario);

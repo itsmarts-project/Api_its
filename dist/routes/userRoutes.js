@@ -31,7 +31,7 @@ userRouter.post("/registrarUsuario", [
     (0, express_validator_1.body)('puesto').notEmpty(),
     (0, express_validator_1.body)('fechaContratacion').notEmpty(),
     (0, express_validator_1.body)('sueldo').notEmpty(),
-    (0, express_validator_1.body)('correo').notEmpty(),
+    (0, express_validator_1.body)('correo').notEmpty().isEmail(),
     (0, express_validator_1.body)('contrasenia').notEmpty(),
     ValidarErrores_1.default
 ], userController_1.registrarUsuario);
