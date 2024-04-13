@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
+const cloudinary = require('cloudinary').v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
-const subirFoto_1 = require("../helpers/subirFoto");
 const getUsuariosPorVisitar = async (req, res) => {
     try {
         const solicitante = await solicitante_1.default.findAll();
@@ -35,8 +36,8 @@ const guardarSolicitante = async (req, res) => {
         }
         //Se inicia una transaccion
         const resultados = await configdb_1.default.transaction(async (t) => {
-            const foto = await (0, subirFoto_1.subirArchivo)(fotoSolicitante, ['img', 'jpg', 'png'], 'solicitantes');
-            solicitante.fotoSolicitante = foto;
+            const foto = await cloudinary.uploader.upload(fotoSolicitante.tempFilePath);
+            solicitante.fotoSolicitante = foto.secure_url;
             //Se guarda en base de datos el solicitante
             const createSolicitante = await solicitante_1.default.create(solicitante, { transaction: t });
             //Se guarda en base de datos el domicilio con la llave foranea de solicitante
@@ -53,7 +54,8 @@ const guardarSolicitante = async (req, res) => {
             return {
                 createSolicitante,
                 createDomicilio,
-                createFormulario
+                createFormulario,
+                foto
             };
         });
         res.send({

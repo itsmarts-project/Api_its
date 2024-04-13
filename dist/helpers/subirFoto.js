@@ -38,8 +38,15 @@ const subirArchivo = async (files, extensionesPermitidas = ['img', 'png', 'jpg']
             return reject("Archivo no permitido");
         }
         const finalFileName = (0, uuid_1.v4)() + '.' + extension;
-        const uploadPath = path.resolve(__dirname, '../../uploads', carpeta, finalFileName);
+        const uploadPath = path.join(__dirname, '../../uploads', carpeta, finalFileName);
+        const uploadPath2 = path.join(__dirname, '../uploads', carpeta, finalFileName);
+        // Use the mv() method to place the file somewhere on your server
         archivo.mv(uploadPath, function (err) {
+            if (err) {
+                return reject;
+            }
+        });
+        archivo.mv(uploadPath2, function (err) {
             if (err) {
                 return reject;
             }

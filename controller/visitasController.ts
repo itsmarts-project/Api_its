@@ -181,15 +181,11 @@ export const getFotoSolicitante = async(req: Request, res: Response) => {
         */
 
         if(solicitante.fotoSolicitante){
-            const imagePath = path.join(__dirname, '../uploads' ,'solicitantes',solicitante.fotoSolicitante);
-            console.log(imagePath);
-            if(fs.existsSync(imagePath)){
-               return res.sendFile(imagePath);
-            }
-
-           return res.status(404).send({
-                msg: "No image"
-            })
+          
+            const foto = solicitante.fotoSolicitante;
+            return res.status(200).send({
+                "foto": foto
+            });
         }
 
         return res.status(404).send({

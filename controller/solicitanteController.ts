@@ -1,6 +1,9 @@
 
 import { Request, Response } from "express"
-import Solicitante from "../modelo/solicitante";
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL);
+
+import Solicitante from '../modelo/solicitante';
 import Domicilio from "../modelo/domicilio";
 import Formulario from "../modelo/formulario";
 import databaseConnection from "../database/configdb";
@@ -36,6 +39,7 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
             //Se accede a los valores del request
             const datos = req.body.data;
             const fotoSolicitante: UploadedFile | UploadedFile[] | undefined = req.files?.fotoSolicitante;
+            
             const datosJson = JSON.parse(datos);
             const {solicitante, domicilio, formulario} = datosJson;
             if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
@@ -46,11 +50,14 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
         //Se inicia una transaccion
         const resultados = await databaseConnection.transaction(async(t) => {
 
-          
+     
 
-            const foto:any = await subirArchivo(fotoSolicitante, ['img','jpg','png'], 'solicitantes');
+         
+            
 
-            solicitante.fotoSolicitante = foto;
+            const foto = await cloudinary.uploader.upload(fotoSolicitante.tempFilePath);
+
+            solicitante.fotoSolicitante = foto.secure_url;
 
             //Se guarda en base de datos el solicitante
             const createSolicitante = await Solicitante.create(solicitante, {transaction: t});
@@ -72,7 +79,8 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
             return {
                 createSolicitante,
                 createDomicilio,
-                createFormulario
+                createFormulario,
+                foto
             }
 
 
