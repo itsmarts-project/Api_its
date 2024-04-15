@@ -1,6 +1,8 @@
 
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL);
 import * as path from "path";
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -66,17 +68,24 @@ export const getVisitasPendientes = async(req: Request, res: Response) => {
 
 }
 
+
+
+
 export const agregarEstatusVisita = async(req: Request, res: Response) => {
 
-    const {id,estatus, razon, latitud, longitud} = req.body;
+    
+
+    const data = req.body.data;
+    const datosJson = JSON.parse(data);
+    const {id,estatus, razon, latitud, longitud} = datosJson;
     const fotoCasa:UploadedFile | UploadedFile[] | undefined = req.files?.fotoCasa;
-    console.log(fotoCasa);
+
 
     try{
     if (!fotoCasa || Array.isArray(fotoCasa)) {
         return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
     }
-    const foto:any = await subirArchivo(fotoCasa, ['img','jpg','png'], 'casas');
+
 
     if(estatus === false || estatus === false || razon === false || id === false){
         return res.status(401).send({
@@ -96,7 +105,11 @@ export const agregarEstatusVisita = async(req: Request, res: Response) => {
             msg: "Registro no encontrado"
         });
     }
-    const establecerEstatus = await visita.update({fotoDomicilio: foto, estatus: estatus, razon: razon, latitudVisita: latitud, longitudVisita: longitud });
+
+    const foto = await cloudinary.uploader.upload(fotoCasa.tempFilePath);
+    const fotoURL = foto.secure_url;
+
+    const establecerEstatus = await visita.update({fotoDomicilio: fotoURL, estatus: estatus, razon: razon, latitudVisita: latitud, longitudVisita: longitud });
 
     return res.send({
         establecerEstatus
@@ -113,7 +126,10 @@ export const agregarEstatusVisita = async(req: Request, res: Response) => {
 
 export const confirmarVisita = async(req: Request, res: Response) => {
 
-    const {id, fecha, hora , latitud, longitud} = req.body;
+    const data = req.body.data;
+    const datosJson = JSON.parse(data);
+    const {id, fecha, hora , latitud, longitud} = datosJson;
+    const fotoCasa:UploadedFile | UploadedFile[] | undefined = req.files?.fotoCasa;
  
 
 
@@ -121,6 +137,10 @@ export const confirmarVisita = async(req: Request, res: Response) => {
         return res.status(404).send({
             msg: "id no especificado"
         });
+    }
+
+    if (!fotoCasa || Array.isArray(fotoCasa)) {
+        return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
     }
 
     try{
@@ -140,7 +160,9 @@ export const confirmarVisita = async(req: Request, res: Response) => {
             });
         }
 
-        await visita.update({confirmacionSolicitante: true, estatus: "EN", razon: "Encontrado", fecha: fecha, hora: hora, latitudVisita: latitud, longitudVisita: longitud });
+        const foto = await cloudinary.uploader.upload(fotoCasa.tempFilePath);
+        const fotoURL = foto.secure_url;
+        await visita.update({confirmacionSolicitante: true, estatus: "EN", razon: "Encontrado", fecha: fecha, hora: hora, latitudVisita: latitud, longitudVisita: longitud, fotoDomicilio: fotoURL});
     
 
         return res.send({

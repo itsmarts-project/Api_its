@@ -50,11 +50,6 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
         //Se inicia una transaccion
         const resultados = await databaseConnection.transaction(async(t) => {
 
-     
-
-         
-            
-
             const foto = await cloudinary.uploader.upload(fotoSolicitante.tempFilePath);
 
             solicitante.fotoSolicitante = foto.secure_url;
