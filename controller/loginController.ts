@@ -6,35 +6,45 @@ import { generateToken } from "../helpers/generarToken";
 const mailgun = require("mailgun.js");
 
 
+//controlador para el inicio de sesion
 export const login = async (req: Request, res: Response) => {
 
+  //trae del body el correo y la contraseña
   const { correo, contrasenia } = req.body;
   try {
 
+    //busca un usuario donde el correo sea igual al de la req
     const usuario: any = await Usuario.findOne({ where: { correo } });
 
+    //si el usuario no existe devuelve el error
     if (!usuario || usuario.estatus === "BA") {
       return res.status(404).send({
         msg: "Hubo un error"
       })
     }
-
+    //si el usuario esta bloqueado devuelve el error
     if (usuario.estatus === "BL") {
       return res.status(401).send({
         msg: "Hubo un error"
       })
     }
 
+    //verifica la contraseña introducida con la contraseña encriptada en base de datos
+    //si coincide devuelve true, si no devuelve false
     const passwordVerification = bcryptjs.compareSync(contrasenia, usuario.contrasenia);
 
+    //si la contraseña es false 
     if (!passwordVerification) {
+      //devuelve el codigo de error
       return res.status(401).send({
         msg: "Hubo un error"
       })
     }
 
+    //genera el token
     const token = await generateToken(usuario.idUsuario);
 
+    //devuelve como respuesta el token generado
     return res.send({
       token
     })
@@ -49,12 +59,17 @@ export const login = async (req: Request, res: Response) => {
 }
 
 
+//controlador para cambiar la contraseña
 export const cambiarContrasenia = async (req: Request, res: Response) => {
-
+  
+  //trae del body el correo
   const { correo } = req.body;
 
+  //busca un usuario que coincida con el correo indicado
   const correoValidado: any = await Usuario.findOne({where: {correo :correo}})
-  if(!correoValidado){return res.status(200).send({correo: "mainez prezidente"})}
+
+  //Si el correo no existe, devuelve el codigo de error
+  if(!correoValidado){return res.status(500).send({correo: "Hubo un error"})}
 
   const nombreU: any = await Usuario.findOne({ where: { correo: correo } });
   const nombreUsuario = nombreU.nombre;

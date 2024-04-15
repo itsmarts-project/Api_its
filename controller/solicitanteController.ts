@@ -11,18 +11,22 @@ import { UploadedFile } from "express-fileupload";
 import { subirArchivo } from "../helpers/subirFoto";
 
 
+//Trae los usuarios por visitar
 export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
 
 
     try{
 
+        //trae todos los solicitantes
         const solicitante = await Solicitante.findAll();
+        //envia como respuesta los solicitantes
         return res.send({
             solicitante
         })
 
+    //atrapa el error
     }catch(e){
-
+        //envia como respuesta el error
         return res.status(500).send({
             msg : "Hubo un error"
         });
@@ -31,7 +35,7 @@ export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
 }
 
 
-
+//Guarda un nuevo solicitante
 export const guardarSolicitante = async(req: Request, res: Response) => {
 
    
@@ -40,8 +44,11 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
             const datos = req.body.data;
             const fotoSolicitante: UploadedFile | UploadedFile[] | undefined = req.files?.fotoSolicitante;
             
+            //parsea el form-data data a json
             const datosJson = JSON.parse(datos);
+            //extrae las propiedades del json ya parseado 
             const {solicitante, domicilio, formulario} = datosJson;
+            //verifica si la foto solicitante esta vacia o si son varias fotos
             if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
                 return res.status(404).send({ msg: 'Hubo un error' });
             }
@@ -50,8 +57,10 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
         //Se inicia una transaccion
         const resultados = await databaseConnection.transaction(async(t) => {
 
+            //Se guarda la foto en cloudinary
             const foto = await cloudinary.uploader.upload(fotoSolicitante.tempFilePath);
 
+            //al campo fotoSolicitante se le asigna como valor la secure_url de la foto
             solicitante.fotoSolicitante = foto.secure_url;
 
             //Se guarda en base de datos el solicitante

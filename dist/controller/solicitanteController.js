@@ -10,33 +10,44 @@ const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
+//Trae los usuarios por visitar
 const getUsuariosPorVisitar = async (req, res) => {
     try {
+        //trae todos los solicitantes
         const solicitante = await solicitante_1.default.findAll();
+        //envia como respuesta los solicitantes
         return res.send({
             solicitante
         });
+        //atrapa el error
     }
     catch (e) {
+        //envia como respuesta el error
         return res.status(500).send({
             msg: "Hubo un error"
         });
     }
 };
 exports.getUsuariosPorVisitar = getUsuariosPorVisitar;
+//Guarda un nuevo solicitante
 const guardarSolicitante = async (req, res) => {
     try {
         //Se accede a los valores del request
         const datos = req.body.data;
         const fotoSolicitante = req.files?.fotoSolicitante;
+        //parsea el form-data data a json
         const datosJson = JSON.parse(datos);
+        //extrae las propiedades del json ya parseado 
         const { solicitante, domicilio, formulario } = datosJson;
+        //verifica si la foto solicitante esta vacia o si son varias fotos
         if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
-            return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+            return res.status(404).send({ msg: 'Hubo un error' });
         }
         //Se inicia una transaccion
         const resultados = await configdb_1.default.transaction(async (t) => {
+            //Se guarda la foto en cloudinary
             const foto = await cloudinary.uploader.upload(fotoSolicitante.tempFilePath);
+            //al campo fotoSolicitante se le asigna como valor la secure_url de la foto
             solicitante.fotoSolicitante = foto.secure_url;
             //Se guarda en base de datos el solicitante
             const createSolicitante = await solicitante_1.default.create(solicitante, { transaction: t });
@@ -64,7 +75,7 @@ const guardarSolicitante = async (req, res) => {
     }
     catch (e) {
         res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         });
     }
 };
@@ -80,8 +91,8 @@ const editarSolicitante = async (req, res) => {
                 const solicitante = await solicitante_1.default.findByPk(id, { transaction: t });
                 //Si el solicitante no existe devuelve un error
                 if (!solicitante) {
-                    return res.status(401).send({
-                        msg: "El solicitante no existe"
+                    return res.status(404).send({
+                        msg: "Hubo un error"
                     });
                 }
                 //Busca el domicilio por la llave foranea del solicitante
@@ -89,7 +100,7 @@ const editarSolicitante = async (req, res) => {
                 //Si el solicitante no existe retorna un error
                 if (!domicilio) {
                     return res.status(500).send({
-                        msg: "Error en el domicilio"
+                        msg: "Hubo un error"
                     });
                 }
                 //Actualiza el solicitante
