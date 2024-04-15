@@ -40,8 +40,8 @@ LOS PARAMETROS DE "registrarUsuario" O SOLAMENTE LOS DATOS A EDITAR*/
 userRouter.put("/editarUsuario", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD"]),
-    validarEmail_1.validarCorreoUsuario,
     (0, express_validator_1.body)('idUsuario').notEmpty(),
+    validarEmail_1.validarCorreoUsuario,
     ValidarErrores_1.default
 ], userController_1.editarUsuario);
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
@@ -60,6 +60,7 @@ userRouter.put("/bloquearUsuario", [
 userRouter.put("/desbloquearUsuario", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD"]),
+    (0, express_validator_1.body)('idUsuario').notEmpty(),
     ValidarErrores_1.default
 ], userController_1.desbloquearUsuario);
 exports.default = userRouter;
