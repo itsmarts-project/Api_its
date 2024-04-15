@@ -14,14 +14,14 @@ export const login = async (req: Request, res: Response) => {
     const usuario: any = await Usuario.findOne({ where: { correo } });
 
     if (!usuario || usuario.estatus === "BA") {
-      return res.status(401).send({
-        msg: "El usuario no existe"
+      return res.status(404).send({
+        msg: "Hubo un error"
       })
     }
 
     if (usuario.estatus === "BL") {
       return res.status(401).send({
-        msg: "Usuario bloqueado, comuniquese con el administrador"
+        msg: "Hubo un error"
       })
     }
 
@@ -29,7 +29,7 @@ export const login = async (req: Request, res: Response) => {
 
     if (!passwordVerification) {
       return res.status(401).send({
-        msg: "Contraseña incorrecta"
+        msg: "Hubo un error"
       })
     }
 
@@ -42,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
 
   } catch (e) {
     return res.status(500).send({
-      e
+      msg: "Hubo un error"
     })
   }
 
@@ -79,7 +79,7 @@ export const cambiarContrasenia = async (req: Request, res: Response) => {
     }) 
     .catch((err: any) => {
       return res.status(500).send({
-        msg: "Error al enviar correo"
+        msg: "Hubo un error"
       })
     }); 
 
@@ -116,7 +116,7 @@ export const solicitarDesbloqueo = async (req: Request, res: Response) => {
     }) 
     .catch((err: any) => {
       return res.status(500).send({
-        msg: "Error al enviar correo"
+        msg: "Hubo un error"
       })
     }); 
 

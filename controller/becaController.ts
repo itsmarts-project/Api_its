@@ -13,7 +13,7 @@ export const aprobarBeca = async(req: Request, res: Response) => {
         const solicitante = await Solicitante.findByPk(id);
         if(!solicitante){
             return res.status(404).send({
-                msg: "Solicitante no existe"
+                msg: "Hubo un error"
             })
         }
         await solicitante.update({montoAprobado: solicitante.montoSolicitado, estatus: "Aprobado"});
@@ -26,7 +26,7 @@ export const aprobarBeca = async(req: Request, res: Response) => {
 
     }catch(e){
         return res.status(500).send({
-            e
+            msg: "Hubo un error"
         })
     }
 }
@@ -41,7 +41,7 @@ export const rechazarBeca = async(req: Request, res: Response) => {
 
         if(!solicitante){
             return res.status(404).send({
-                msg: "Solicitante no existe"
+                msg: "Hubo un error"
             })
         }
 

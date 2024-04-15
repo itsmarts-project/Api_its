@@ -24,7 +24,7 @@ export const getVisitasPendientes = async(req: Request, res: Response) => {
 
         if(!usuario){
             return res.status(404).send({
-                msg: "El usuario no existe"
+                msg: "Hubo un error"
             })
         }
 
@@ -62,7 +62,7 @@ export const getVisitasPendientes = async(req: Request, res: Response) => {
 
     }catch(e){
         return res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         })
     }
 
@@ -83,26 +83,26 @@ export const agregarEstatusVisita = async(req: Request, res: Response) => {
 
     try{
     if (!fotoCasa || Array.isArray(fotoCasa)) {
-        return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+        return res.status(404).send({ msg: 'Hubo un error' });
     }
 
 
     if(estatus === false || estatus === false || razon === false || id === false){
         return res.status(401).send({
-            msg: "Estatus vacio"
+            msg: "Hubo un error"
         });
     }
 
     const solicitante = await Solicitante.findByPk(id);
     if(!solicitante){
         return res.status(404).send({
-            msg: "Solicitante no encontrado"
+            msg: "Hubo un error"
         });
     }
     const visita = await Visita.findOne({where: {solicitante_idSolicitante: solicitante.idSolicitante}});
     if(!visita){
         return res.status(404).send({
-            msg: "Registro no encontrado"
+            msg: "Hubo un error"
         });
     }
 
@@ -117,7 +117,7 @@ export const agregarEstatusVisita = async(req: Request, res: Response) => {
 
     }catch(e){
         return res.status(500).send({
-            e
+            msg: "Hubo un error"
         })
     }
 

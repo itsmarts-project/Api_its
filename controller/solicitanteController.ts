@@ -43,7 +43,7 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
             const datosJson = JSON.parse(datos);
             const {solicitante, domicilio, formulario} = datosJson;
             if (!fotoSolicitante || Array.isArray(fotoSolicitante)) {
-                return res.status(404).send({ msg: 'Se esperaba un solo archivo' });
+                return res.status(404).send({ msg: 'Hubo un error' });
             }
 
          
@@ -86,7 +86,7 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
 
     }catch(e){
         res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         })
     }
 
@@ -106,8 +106,8 @@ export const editarSolicitante = async(req: Request, res: Response) => {
             const solicitante = await Solicitante.findByPk(id, {transaction: t});
             //Si el solicitante no existe devuelve un error
             if(!solicitante){
-                return res.status(401).send({
-                    msg: "El solicitante no existe"
+                return res.status(404).send({
+                    msg: "Hubo un error"
                 });
             }
             //Busca el domicilio por la llave foranea del solicitante
@@ -115,7 +115,7 @@ export const editarSolicitante = async(req: Request, res: Response) => {
             //Si el solicitante no existe retorna un error
             if(!domicilio){
                 return res.status(500).send({
-                    msg: "Error en el domicilio"
+                    msg: "Hubo un error"
                 });
             }
             //Actualiza el solicitante

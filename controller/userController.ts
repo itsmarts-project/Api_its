@@ -15,7 +15,7 @@ export const getUsuario = async(req: Request, res: Response) => {
 
     }catch(e){
         return res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         })
     }
 
@@ -31,7 +31,7 @@ export const getRolUsuario = async(req: Request, res: Response) => {
 
         if(!usuario){
             return res.status(404).send({
-                msg: "El usuario no existe"
+                msg: "Hubo un error"
             })
         }
 
@@ -65,7 +65,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
 
     }catch(e){
         return res.status(500).send({
-            e
+            msg: "Hubo un error"
         })
     }
 }
@@ -78,7 +78,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
         const usuario = await Usuario.findByPk(idUsuario);
 
         if (!usuario) {
-            return res.status(404).send({ msg: 'Usuario no encontrado' });
+            return res.status(404).send({ msg: 'Hubo un error' });
         }
 
         // Actualizar los campos del usuario
@@ -102,7 +102,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
 
         res.send({ usuario });
     } catch (e) {
-        return res.status(500).send({ e });
+        return res.status(500).send({ msg: "Hubo un error" });
     }
 };
 
@@ -114,7 +114,7 @@ export const borrarUsuario = async (req: Request, res: Response) => {
       const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
   
       if (!usuario) {
-        return res.status(404).send({ msg: "Usuario no encontrado" });
+        return res.status(404).send({ msg: "Hubo un error" });
       }
   
       // Cambiar el estatus del usuario a "BA" (baja)
@@ -125,7 +125,7 @@ export const borrarUsuario = async (req: Request, res: Response) => {
   
       res.send({ usuario });
     } catch (e) {
-      return res.status(500).send({ e });
+      return res.status(500).send({ msg: "Hubo un error" });
     }
   };
 
@@ -137,7 +137,7 @@ export const borrarUsuario = async (req: Request, res: Response) => {
       const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
   
       if (!usuario) {
-        return res.status(404).send({ msg: "Usuario no encontrado" });
+        return res.status(404).send({ msg: "Hubo error" });
       }
   
       // Cambiar el estatus del usuario a "BA" (baja)
@@ -148,7 +148,7 @@ export const borrarUsuario = async (req: Request, res: Response) => {
   
       res.send({ usuario });
     } catch (e) {
-      return res.status(500).send({ e });
+      return res.status(500).send({ msg: "Hubo un error" });
     }
   };
 
@@ -160,7 +160,7 @@ export const borrarUsuario = async (req: Request, res: Response) => {
       const usuario = await Usuario.findByPk<UsuarioInstance>(idUsuario);
   
       if (!usuario) {
-        return res.status(404).send({ msg: "Usuario no encontrado" });
+        return res.status(404).send({ msg: "Hubo un error" });
       }
   
       // Cambiar el estatus del usuario a "BA" (baja)
@@ -171,6 +171,6 @@ export const borrarUsuario = async (req: Request, res: Response) => {
   
       res.send({ usuario });
     } catch (e) {
-      return res.status(500).send({ e });
+      return res.status(500).send({ msg: "Hubo un error" });
     }
   };
