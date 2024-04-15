@@ -14,7 +14,7 @@ export const validarCorreoUsuario = async(req: Request, res: Response, next: any
 
         if(usuario){
             return res.status(401).send({
-                msg: "Correo ya registrado"
+                msg: "Hubo un error"
             })
         }
 
@@ -22,7 +22,7 @@ export const validarCorreoUsuario = async(req: Request, res: Response, next: any
 
     }catch(e){
         res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         })
     }
 
@@ -39,7 +39,7 @@ export const validarCorreoSolicitante = async(req: Request, res: Response, next:
 
         if(solicitante){
             return res.status(401).send({
-                msg: "Solicitante ya existente"
+                msg: "Hubo un error"
             })
         }
 
@@ -47,7 +47,7 @@ export const validarCorreoSolicitante = async(req: Request, res: Response, next:
 
     }catch(e){
         return res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         });
     }
 }

@@ -9,7 +9,7 @@ const validarJWT = async (req, res, next) => {
     const token = req.header('token');
     if (!token) {
         return res.status(401).send({
-            msg: "No se establacio ningun token"
+            msg: "Hubo un error"
         });
     }
     try {
@@ -19,13 +19,13 @@ const validarJWT = async (req, res, next) => {
         //VALIDA QUE EL USUARIO EXISTA EN LA BASE DE DATOS
         if (!usuarioValidado) {
             return res.status(401).send({
-                msg: "Token no valido"
+                msg: "Hubo un error"
             });
         }
         //VALIDA QUE EL USUARIO ESTE ACTIVO
         if (usuarioValidado.estado === "BA") {
             return res.status(401).send({
-                msg: "token no valido"
+                msg: "Hubo un error"
             });
         }
         req.usuario = usuarioValidado;
@@ -33,7 +33,7 @@ const validarJWT = async (req, res, next) => {
     }
     catch (e) {
         return res.status(401).send({
-            msg: e
+            msg: "Hubo un error"
         });
     }
 };

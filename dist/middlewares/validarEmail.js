@@ -14,14 +14,14 @@ const validarCorreoUsuario = async (req, res, next) => {
         console.log(usuario);
         if (usuario) {
             return res.status(401).send({
-                msg: "Correo ya registrado"
+                msg: "Hubo un error"
             });
         }
         next();
     }
     catch (e) {
         res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         });
     }
 };
@@ -34,14 +34,14 @@ const validarCorreoSolicitante = async (req, res, next) => {
         console.log(solicitante);
         if (solicitante) {
             return res.status(401).send({
-                msg: "Solicitante ya existente"
+                msg: "Hubo un error"
             });
         }
         next();
     }
     catch (e) {
         return res.status(500).send({
-            msg: e
+            msg: "Hubo un error"
         });
     }
 };

@@ -155,5 +155,40 @@ export const editarSolicitante = async(req: Request, res: Response) => {
 
 }
 
+//Trae un solicitante en especifico
+export const getSolicitante = async(req: Request, res: Response) => {
 
+    //Accede al id del body
+    const {id} = req.body;
+
+    try{
+        //busca el solicitante que coincida con el id
+        const solicitante = await Solicitante.findByPk(id);
+        //si el solicitante no existe devuelve un error
+        if(!solicitante){
+            return res.status(404).send({
+                msg: "Hubo un error"
+            });
+        }
+        //busca el domicilio que su llave foranea coincida con el id del solicitante
+        const domicilio = await Domicilio.findOne({where: {solicitante_idSolicitante: solicitante.idSolicitante}});
+
+        if(!domicilio){
+            return res.status(500).send({
+                msg: "Hubo un error"
+            })
+        }
+        //
+        return res.send({
+            solicitante,
+            domicilio
+        });
+
+    }catch(e){
+        return res.status(500).send({
+            msg: "Hubo un error"
+        })
+    }
+
+}
 

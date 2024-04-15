@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
+exports.getSolicitante = exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
 const cloudinary = require('cloudinary').v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
@@ -126,4 +126,37 @@ const editarSolicitante = async (req, res) => {
     }
 };
 exports.editarSolicitante = editarSolicitante;
+//Trae un solicitante en especifico
+const getSolicitante = async (req, res) => {
+    //Accede al id del body
+    const { id } = req.body;
+    try {
+        //busca el solicitante que coincida con el id
+        const solicitante = await solicitante_1.default.findByPk(id);
+        //si el solicitante no existe devuelve un error
+        if (!solicitante) {
+            return res.status(404).send({
+                msg: "Hubo un error"
+            });
+        }
+        //busca el domicilio que su llave foranea coincida con el id del solicitante
+        const domicilio = await domicilio_1.default.findOne({ where: { solicitante_idSolicitante: solicitante.idSolicitante } });
+        if (!domicilio) {
+            return res.status(500).send({
+                msg: "Hubo un error"
+            });
+        }
+        //
+        return res.send({
+            solicitante,
+            domicilio
+        });
+    }
+    catch (e) {
+        return res.status(500).send({
+            msg: "Hubo un error"
+        });
+    }
+};
+exports.getSolicitante = getSolicitante;
 //# sourceMappingURL=solicitanteController.js.map

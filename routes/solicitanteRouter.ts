@@ -1,17 +1,24 @@
 import { Router } from "express";
-import { editarSolicitante, getUsuariosPorVisitar, guardarSolicitante } from "../controller/solicitanteController";
+import { editarSolicitante, getSolicitante, getUsuariosPorVisitar, guardarSolicitante } from "../controller/solicitanteController";
 import validarJWT from "../middlewares/validarToken";
 import validarRol from "../middlewares/validarRol";
 import validarCampos from "../middlewares/ValidarErrores";
 import { validarCorreoSolicitante } from "../middlewares/validarEmail";
+import { body } from "express-validator";
 
 const solicitanteRouter = Router();
 
-solicitanteRouter.get("/getSolicitantes",[
+solicitanteRouter.get("/solicitantes",[
     validarJWT,
     validarRol(["AD","CA"]),
     validarCampos
 ], getUsuariosPorVisitar)
+solicitanteRouter.post("/solicitante", [
+    validarJWT,
+    validarRol(["AD","CA"]),
+    body("id").notEmpty(),
+    validarCampos
+],getSolicitante);
 solicitanteRouter.post("/registrar", [
     validarJWT,
     validarRol(["AD", "CA"]),
