@@ -45,7 +45,6 @@ userRouter.put("/editarUsuario",[
     validarJWT,
     validarRol(["AD"]),
     body('idUsuario').notEmpty(),
-    validarCorreoUsuario,
     validarCampos
 ], editarUsuario);
 
@@ -60,7 +59,9 @@ userRouter.put("/borrarUsuario",[
 
 
 //METODO POST, RECIBE UNICAMENTE ID DE USUARIO
-userRouter.put("/bloquearUsuario",[
+userRouter.post("/bloquearUsuario",[
+    validarJWT,
+    validarRol(['AD']),
     body('idUsuario').notEmpty(),
     validarCampos
 ],bloquearUsuario);

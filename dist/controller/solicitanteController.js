@@ -3,15 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSolicitante = exports.editarSolicitante = exports.guardarSolicitante = exports.getUsuariosPorVisitar = void 0;
+exports.getSolicitante = exports.editarSolicitante = exports.guardarSolicitante = exports.getSolicitantes = void 0;
 const cloudinary = require('cloudinary').v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 const solicitante_1 = __importDefault(require("../modelo/solicitante"));
 const domicilio_1 = __importDefault(require("../modelo/domicilio"));
 const formulario_1 = __importDefault(require("../modelo/formulario"));
 const configdb_1 = __importDefault(require("../database/configdb"));
-//Trae los usuarios por visitar
-const getUsuariosPorVisitar = async (req, res) => {
+const getSolicitantes = async (req, res) => {
     try {
         //trae todos los solicitantes
         const solicitante = await solicitante_1.default.findAll();
@@ -28,7 +27,7 @@ const getUsuariosPorVisitar = async (req, res) => {
         });
     }
 };
-exports.getUsuariosPorVisitar = getUsuariosPorVisitar;
+exports.getSolicitantes = getSolicitantes;
 //Guarda un nuevo solicitante
 const guardarSolicitante = async (req, res) => {
     try {
@@ -83,43 +82,38 @@ exports.guardarSolicitante = guardarSolicitante;
 const editarSolicitante = async (req, res) => {
     //Accede a los elementos de la peticion
     const { id, reqSolicitante, reqDomicilio } = req.body;
+    const { correo, ...restoSolicitante } = reqSolicitante;
     try {
         //Se inicia transaccion
-        const resultado = configdb_1.default.transaction(async (t) => {
+        const resultado = await configdb_1.default.transaction(async (t) => {
             try {
                 //Se busca al solicitante por el id
                 const solicitante = await solicitante_1.default.findByPk(id, { transaction: t });
                 //Si el solicitante no existe devuelve un error
                 if (!solicitante) {
-                    return res.status(404).send({
-                        msg: "Hubo un error"
-                    });
+                    throw new Error("error solicitante");
                 }
                 //Busca el domicilio por la llave foranea del solicitante
-                const domicilio = await domicilio_1.default.findByPk(solicitante.idSolicitante, { transaction: t });
+                const domicilio = await domicilio_1.default.findOne({ where: { solicitante_idSolicitante: solicitante.idSolicitante }, transaction: t });
                 //Si el solicitante no existe retorna un error
                 if (!domicilio) {
-                    return res.status(500).send({
-                        msg: "Hubo un error"
-                    });
+                    throw new Error("error domicilio");
                 }
                 //Actualiza el solicitante
-                await solicitante.update(reqSolicitante);
+                await solicitante.update(restoSolicitante);
                 //Actualiza el domicilio
                 await domicilio.update(reqDomicilio);
                 return { solicitante, domicilio };
             }
             catch (e) {
-                return res.status(500).send({
-                    msg: e
-                });
+                throw "Hubo un error";
             }
         });
         return res.send({
             resultado
         });
     }
-    catch (e) {
+    catch (error) {
         return res.status(500).send({
             msg: "Hubo un error"
         });

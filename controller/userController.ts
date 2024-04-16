@@ -89,7 +89,7 @@ export const registrarUsuario = async(req: Request, res: Response) => {
 
 export const editarUsuario = async (req: Request, res: Response) => {
   //accede a todos los parametros del body
-    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia, estatus, correo } = req.body;
+    const { idUsuario, nombre, primerApellido, segundoApellido, puesto,sueldo, contrasenia, estatus} = req.body;
 
     try {
         // Buscar el usuario por su idUsuario
@@ -106,7 +106,6 @@ export const editarUsuario = async (req: Request, res: Response) => {
         usuario.puesto = puesto || usuario.puesto;
         usuario.sueldo = sueldo || usuario.sueldo;
         usuario.estatus = estatus || usuario.estatus;
-        usuario.correo = correo || usuario.correo;
 
         // Si se proporciona una nueva contraseña, hash it
         if (contrasenia) {

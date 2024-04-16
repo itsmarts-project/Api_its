@@ -80,7 +80,7 @@ const registrarUsuario = async (req, res) => {
 exports.registrarUsuario = registrarUsuario;
 const editarUsuario = async (req, res) => {
     //accede a todos los parametros del body
-    const { idUsuario, nombre, primerApellido, segundoApellido, puesto, sueldo, contrasenia, estatus, correo } = req.body;
+    const { idUsuario, nombre, primerApellido, segundoApellido, puesto, sueldo, contrasenia, estatus } = req.body;
     try {
         // Buscar el usuario por su idUsuario
         const usuario = await usuario_1.default.findByPk(idUsuario);
@@ -94,7 +94,6 @@ const editarUsuario = async (req, res) => {
         usuario.puesto = puesto || usuario.puesto;
         usuario.sueldo = sueldo || usuario.sueldo;
         usuario.estatus = estatus || usuario.estatus;
-        usuario.correo = correo || usuario.correo;
         // Si se proporciona una nueva contraseña, hash it
         if (contrasenia) {
             const salt = bcryptjs_1.default.genSaltSync(10);

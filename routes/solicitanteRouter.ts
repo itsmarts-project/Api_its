@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { editarSolicitante, getSolicitante, getUsuariosPorVisitar, guardarSolicitante } from "../controller/solicitanteController";
+import { editarSolicitante, getSolicitante,getSolicitantes,guardarSolicitante } from "../controller/solicitanteController";
 import validarJWT from "../middlewares/validarToken";
 import validarRol from "../middlewares/validarRol";
 import validarCampos from "../middlewares/ValidarErrores";
@@ -12,7 +12,7 @@ solicitanteRouter.get("/solicitantes",[
     validarJWT,
     validarRol(["AD","CA"]),
     validarCampos
-], getUsuariosPorVisitar)
+], getSolicitantes)
 solicitanteRouter.post("/solicitante", [
     validarJWT,
     validarRol(["AD","CA"]),

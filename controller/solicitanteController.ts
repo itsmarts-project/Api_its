@@ -11,8 +11,7 @@ import { UploadedFile } from "express-fileupload";
 import { subirArchivo } from "../helpers/subirFoto";
 
 
-//Trae los usuarios por visitar
-export const getUsuariosPorVisitar = async(req: Request, res: Response) => {
+export const getSolicitantes = async(req: Request, res: Response) => {
 
 
     try{
@@ -104,39 +103,40 @@ export const guardarSolicitante = async(req: Request, res: Response) => {
 export const editarSolicitante = async(req: Request, res: Response) => {
 
     //Accede a los elementos de la peticion
+    
     const {id,reqSolicitante, reqDomicilio} = req.body;
+
+    const {correo, ...restoSolicitante} = reqSolicitante;
+
 
     try{
         //Se inicia transaccion
-        const resultado = databaseConnection.transaction(async(t) => {
+        const resultado = await databaseConnection.transaction(async(t) => {
 
             try{
   //Se busca al solicitante por el id
             const solicitante = await Solicitante.findByPk(id, {transaction: t});
+        
             //Si el solicitante no existe devuelve un error
             if(!solicitante){
-                return res.status(404).send({
-                    msg: "Hubo un error"
-                });
+                throw new Error("error solicitante");
             }
             //Busca el domicilio por la llave foranea del solicitante
-            const domicilio = await Domicilio.findByPk(solicitante.idSolicitante, {transaction: t});
+            const domicilio = await Domicilio.findOne({where: {solicitante_idSolicitante: solicitante.idSolicitante}, transaction: t});
             //Si el solicitante no existe retorna un error
             if(!domicilio){
-                return res.status(500).send({
-                    msg: "Hubo un error"
-                });
+                throw new Error("error domicilio");
             }
             //Actualiza el solicitante
-            await solicitante.update(reqSolicitante);
+            await solicitante.update(restoSolicitante);
             //Actualiza el domicilio
             await domicilio.update(reqDomicilio);
 
             return {solicitante, domicilio}
+
+
             }catch(e){
-                return res.status(500).send({
-                    msg: e
-                });
+                throw "Hubo un error"
             }
           
             
@@ -146,10 +146,10 @@ export const editarSolicitante = async(req: Request, res: Response) => {
             resultado
         });
 
-    }catch(e){
+    }catch(error){
         return res.status(500).send({
             msg: "Hubo un error"
-        })
+        })  
     }
 
 
@@ -184,6 +184,8 @@ export const getSolicitante = async(req: Request, res: Response) => {
             domicilio
         });
 
+
+
     }catch(e){
         return res.status(500).send({
             msg: "Hubo un error"
@@ -191,4 +193,3 @@ export const getSolicitante = async(req: Request, res: Response) => {
     }
 
 }
-

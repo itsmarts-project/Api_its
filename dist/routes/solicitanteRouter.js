@@ -14,7 +14,7 @@ solicitanteRouter.get("/solicitantes", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD", "CA"]),
     ValidarErrores_1.default
-], solicitanteController_1.getUsuariosPorVisitar);
+], solicitanteController_1.getSolicitantes);
 solicitanteRouter.post("/solicitante", [
     validarToken_1.default,
     (0, validarRol_1.default)(["AD", "CA"]),
